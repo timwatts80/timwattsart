@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/links',
-  assetPrefix: '/links',
   trailingSlash: true,
   output: 'export',
   images: {
