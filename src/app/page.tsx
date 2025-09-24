@@ -237,7 +237,10 @@ function MobileMosaic({ onImageClick }: { onImageClick: (index: number) => void 
                 flexBasis: toPercent(block.width),
                 aspectRatio: `${block.aspect}`,
               }}
-              onClick={() => onImageClick(block.index)}
+              onClick={() => {
+                console.log('MobileMosaic image clicked, index:', block.index);
+                onImageClick(block.index);
+              }}
             >
               <img 
                 src={block.img} 
@@ -469,8 +472,10 @@ export default function HomePage() {
   // Remove the localStorage save effect since we're using database now
 
   const openLightbox = (index: number) => {
+    console.log('Opening lightbox with index:', index);
     setCurrentLightboxIndex(index);
     setLightboxOpen(true);
+    console.log('Lightbox state set to true');
   };
 
   const closeLightbox = () => {
@@ -692,21 +697,24 @@ export default function HomePage() {
               <div className="relative w-full max-h-[600px]">
                 <div className="flex flex-col gap-[20px] items-start justify-center relative h-full scale-125 pt-2">
                   <div className="flex gap-[25.633px] items-end justify-start relative shrink-0">
-                    <div className="h-[168px] shrink-0 w-[132px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden">
+                    <div className="h-[168px] shrink-0 w-[132px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => {
+                      console.log('Desktop image clicked, index: 0');
+                      openLightbox(0);
+                    }}>
                       <img src="/images/TIM_IMG_001.png" alt="Artwork" className="w-full h-full object-cover" />
                     </div>
-                    <div className="h-[301px] shrink-0 w-[236px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden">
+                    <div className="h-[301px] shrink-0 w-[236px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => openLightbox(3)}>
                       <img src="/images/TIM_IMG_004.png" alt="Artwork" className="w-full h-full object-cover" />
                     </div>
-                    <div className="h-[258px] shrink-0 w-[206px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden">
+                    <div className="h-[258px] shrink-0 w-[206px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => openLightbox(2)}>
                       <img src="/images/TIM_IMG_003.png" alt="Artwork" className="w-full h-full object-cover" />
                     </div>
                   </div>
                   <div className="flex gap-[26.273px] items-start justify-start relative shrink-0 ml-20">
-                    <div className="h-[203px] shrink-0 w-[162px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden">
+                    <div className="h-[203px] shrink-0 w-[162px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => openLightbox(1)}>
                       <img src="/images/TIM_IMG_002.png" alt="Artwork" className="w-full h-full object-cover" />
                     </div>
-                    <div className="h-[266px] shrink-0 w-[212px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden">
+                    <div className="h-[266px] shrink-0 w-[212px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => openLightbox(4)}>
                       <img src="/images/TIM_IMG_005.png" alt="Artwork" className="w-full h-full object-cover" />
                     </div>
                   </div>
