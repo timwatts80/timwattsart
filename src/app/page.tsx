@@ -643,7 +643,7 @@ export default function HomePage() {
                   />
                   
                   {/* Animated heart in center */}
-                  {heartAnimations[piece.id] && (
+                  {mounted && heartAnimations[piece.id] && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
                       <svg
                         width="60"
@@ -661,28 +661,30 @@ export default function HomePage() {
                   )}
                   
                   {/* Like button and counter - bottom left */}
-                  <div className="absolute bottom-3 left-3 z-10">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleLike(piece.id);
-                      }}
-                      className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white px-3 py-2 rounded-full hover:bg-black/80 transition-colors"
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="text-red-500 hover:scale-110 transition-transform"
+                  {mounted && (
+                    <div className="absolute bottom-3 left-3 z-10">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleLike(piece.id);
+                        }}
+                        className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white px-3 py-2 rounded-full hover:bg-black/80 transition-colors"
                       >
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                      </svg>
-                      <span className="text-sm font-medium">{likes[piece.id] || 0}</span>
-                    </button>
-                  </div>
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          className="text-red-500 hover:scale-110 transition-transform"
+                        >
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <span className="text-sm font-medium">{likes[piece.id] || 0}</span>
+                      </button>
+                    </div>
+                  )}
                   
                   {/* SOLD OUT overlay */}
                   {!piece.available && (
@@ -797,7 +799,7 @@ export default function HomePage() {
           <div className="pt-8 border-t border-gray-800">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <p className="text-gray-400 text-sm mb-4 md:mb-0">
-                © {mounted ? new Date().getFullYear() : 2025} Tim Watts. All rights reserved.
+                © 2025 Tim Watts. All rights reserved.
               </p>
             </div>
           </div>
