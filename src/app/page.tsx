@@ -184,7 +184,7 @@ function CommissionForm({ isOpen, onClose }: CommissionFormProps) {
 }
 
 // Mobile Mosaic Component - Scalable version
-function MobileMosaic() {
+function MobileMosaic({ onImageClick }: { onImageClick: (index: number) => void }) {
   // Base width of the original Figma frame in px (sum of widths + gaps of the widest row)
   const BASE_WIDTH = 336.152;
 
@@ -205,17 +205,17 @@ function MobileMosaic() {
     {
       gapRatio: GAP_ROW1,
       blocks: [
-        { img: "/images/TIM_IMG_001.png", width: 70.911, aspect: 70.911 / 90.412 },
-        { img: "/images/TIM_IMG_004.png", width: 126.914, aspect: 126.914 / 161.816 },
-        { img: "/images/TIM_IMG_003.png", width: 110.763, aspect: 110.763 / 138.722 },
+        { img: "/images/TIM_IMG_001.png", width: 70.911, aspect: 70.911 / 90.412, index: 0 },
+        { img: "/images/TIM_IMG_004.png", width: 126.914, aspect: 126.914 / 161.816, index: 3 },
+        { img: "/images/TIM_IMG_003.png", width: 110.763, aspect: 110.763 / 138.722, index: 2 },
       ],
       align: "items-end",
     },
     {
       gapRatio: GAP_ROW2,
       blocks: [
-        { img: "/images/TIM_IMG_002.png", width: 87.105, aspect: 87.105 / 109.15 },
-        { img: "/images/TIM_IMG_005.png", width: 113.989, aspect: 113.989 / 143.024 },
+        { img: "/images/TIM_IMG_002.png", width: 87.105, aspect: 87.105 / 109.15, index: 1 },
+        { img: "/images/TIM_IMG_005.png", width: 113.989, aspect: 113.989 / 143.024, index: 4 },
       ],
       align: "items-start",
     },
@@ -237,6 +237,7 @@ function MobileMosaic() {
                 flexBasis: toPercent(block.width),
                 aspectRatio: `${block.aspect}`,
               }}
+              onClick={() => onImageClick(block.index)}
             >
               <img 
                 src={block.img} 
@@ -405,6 +406,15 @@ const galleryPieces = [
   },
 ];
 
+// Hero images for lightbox
+const heroImages = [
+  { src: "/images/TIM_IMG_001.png", title: "Artwork 1" },
+  { src: "/images/TIM_IMG_002.png", title: "Artwork 2" },
+  { src: "/images/TIM_IMG_003.png", title: "Artwork 3" },
+  { src: "/images/TIM_IMG_004.png", title: "Artwork 4" },
+  { src: "/images/TIM_IMG_005.png", title: "Artwork 5" },
+];
+
 export default function HomePage() {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -416,6 +426,8 @@ export default function HomePage() {
   const [likes, setLikes] = useState<Record<number, number>>({});
   const [heartAnimations, setHeartAnimations] = useState<Record<number, boolean>>({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentLightboxIndex, setCurrentLightboxIndex] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -436,7 +448,42 @@ export default function HomePage() {
       });
   }, []);
 
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!lightboxOpen) return;
+      
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft') {
+        prevImage();
+      } else if (e.key === 'ArrowRight') {
+        nextImage();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxOpen]);
+
   // Remove the localStorage save effect since we're using database now
+
+  const openLightbox = (index: number) => {
+    setCurrentLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  const nextImage = () => {
+    setCurrentLightboxIndex((prev) => (prev + 1) % heroImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentLightboxIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
 
   const handleLike = async (pieceId: number) => {
     try {
@@ -695,7 +742,7 @@ export default function HomePage() {
 
           {/* Mosaic Block */}
           <div className="px-4 sm:px-6 pb-12">
-            <MobileMosaic />
+            <MobileMosaic onImageClick={openLightbox} />
           </div>
         </div>
       </section>
@@ -942,6 +989,64 @@ export default function HomePage() {
           artworkSrc={selectedArtwork.src}
         />
       )}
+      {/* Hero Lightbox */}
+      {lightboxOpen && (
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50" onClick={closeLightbox}>
+          <div className="relative max-w-4xl max-h-full p-4" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={closeLightbox}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl z-10"
+              aria-label="Close lightbox"
+            >
+              ×
+            </button>
+            
+            <div className="relative">
+              <img
+                src={heroImages[currentLightboxIndex].src}
+                alt={heroImages[currentLightboxIndex].title}
+                className="max-w-full max-h-[80vh] object-contain"
+              />
+              
+              {/* Navigation arrows */}
+              <button
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 text-4xl"
+                aria-label="Previous image"
+              >
+                ‹
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 text-4xl"
+                aria-label="Next image"
+              >
+                ›
+              </button>
+              
+              {/* Image counter */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white bg-black/50 px-3 py-1 rounded">
+                {currentLightboxIndex + 1} / {heroImages.length}
+              </div>
+              
+              {/* Thumbnail navigation */}
+              <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex space-x-2">
+                {heroImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentLightboxIndex(index)}
+                    className={`w-3 h-3 rounded-full transition-colors ${
+                      index === currentLightboxIndex ? 'bg-white' : 'bg-white/50'
+                    }`}
+                    aria-label={`Go to image ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 }
