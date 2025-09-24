@@ -1,15 +1,35 @@
-# Tim Watts Art - Links Page
+# Tim Watts Art - Portfolio Website
 
-A Next.js landing page for Tim Watts' social media links, hosted at www.timwatts.art/links and deployed on Vercel.
+A contemporary Next.js portfolio website for Tim Watts Art, featuring a professional gallery and social media links page.
+
+## Site Structure
+
+- **Homepage** (`/`) - Contemporary art portfolio with mosaic hero, gallery, and email signup
+- **Links Page** (`/links`) - Social media links and contact information
+- **Gallery** - Artwork showcase with preorder functionality and SOLD OUT flags
 
 ## Features
 
+### Portfolio Homepage
+- Contemporary black and white design
+- Mosaic artwork hero section
+- Gallery with SOLD OUT overlay flags
+- Preorder functionality for prints
+- Email newsletter signup
+- Responsive navigation
+
+### Links Page  
 - Modern, responsive design with Tailwind CSS
 - Dark theme with gradient background
 - Social media links with icons
-- Optimized for deployment on Vercel
+- Artist signature branding
+
+### Technical Features
 - TypeScript support
-- ESLint configuration
+- Tailwind CSS styling
+- Static export for Vercel deployment
+- SEO optimized
+- Mobile responsive design
 
 ## Development
 
@@ -36,7 +56,7 @@ A Next.js landing page for Tim Watts' social media links, hosted at www.timwatts
    npm run dev
    ```
 
-4. Open [http://localhost:3000/links](http://localhost:3000/links) in your browser.
+4. Open [http://localhost:3000](http://localhost:3000) for the portfolio or [http://localhost:3000/links](http://localhost:3000/links) for social links.
 
 ### Building for Production
 
@@ -45,6 +65,28 @@ npm run build
 ```
 
 The build outputs static files that can be deployed to any static hosting service.
+
+## Adding Your Artwork
+
+To add your own artwork images:
+
+1. Place artwork images in `/public/artwork/` directory
+2. Update the `galleryPieces` array in `/src/app/page.tsx` with your image paths and details
+3. Update availability and preorder status as needed
+
+Example artwork object:
+```javascript
+{
+  id: 1,
+  title: 'Your Artwork Title',
+  size: '24" x 36"',
+  medium: 'Your Medium',
+  price: '$450',
+  available: true,
+  preorder: true,
+  src: '/artwork/your-image.jpg'
+}
+```
 
 ## Deployment
 

@@ -2,26 +2,689 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ======================
+   DESIGN TOKENS
+   Core design tokens for the Tim Watts Art portfolio
+   ====================== */
+
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* ======================
+     BRAND COLORS
+     ====================== */
+  --brand-primary: #000000;
+  --brand-secondary: #ffffff;
+  
+  /* ======================
+     NEUTRAL COLORS
+     ====================== */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
+  
+  /* ======================
+     FUNCTIONAL COLORS
+     ====================== */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* ======================
+     SEMANTIC COLORS
+     ====================== */
+  /* Background Colors */
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f5f5f5;
+  --color-background-tertiary: #000000;
+  --color-background-overlay: rgba(255, 255, 255, 0.7);
+  
+  /* Text Colors */
+  --color-text-primary: #000000;
+  --color-text-secondary: #525252;
+  --color-text-tertiary: #737373;
+  --color-text-inverse: #ffffff;
+  --color-text-muted: #a3a3a3;
+  
+  /* Border Colors */
+  --color-border-primary: #e5e5e5;
+  --color-border-secondary: #d4d4d4;
+  --color-border-dark: #404040;
+  
+  /* Interactive Colors */
+  --color-interactive-primary: #000000;
+  --color-interactive-primary-hover: #262626;
+  --color-interactive-secondary: transparent;
+  --color-interactive-secondary-hover: #000000;
+  --color-interactive-link: #000000;
+  --color-interactive-link-hover: #525252;
+  
+  /* ======================
+     TYPOGRAPHY TOKENS
+     ====================== */
+  /* Font Families */
+  --font-family-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-secondary: Georgia, "Times New Roman", serif;
+  --font-family-mono: Monaco, Menlo, "Ubuntu Mono", monospace;
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.25rem;      /* 20px */
+  --font-size-2xl: 1.5rem;      /* 24px */
+  --font-size-3xl: 1.875rem;    /* 30px */
+  --font-size-4xl: 2.25rem;     /* 36px */
+  --font-size-5xl: 3rem;        /* 48px */
+  --font-size-6xl: 3.75rem;     /* 60px */
+  --font-size-7xl: 4.5rem;      /* 72px */
+  --font-size-8xl: 6rem;        /* 96px */
+  --font-size-9xl: 8rem;        /* 128px */
+  
+  /* Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+  
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+  
+  /* Typography Presets - Hero */
+  --typography-hero-large-font-size: 4.5rem;
+  --typography-hero-large-font-weight: 300;
+  --typography-hero-large-line-height: 1.25;
+  --typography-hero-large-letter-spacing: -0.025em;
+  
+  --typography-hero-medium-font-size: 3rem;
+  --typography-hero-medium-font-weight: 300;
+  --typography-hero-medium-line-height: 1.25;
+  --typography-hero-medium-letter-spacing: -0.025em;
+  
+  /* Typography Presets - HTML Headings */
+  --typography-h1-font-size: 3.25rem;
+  --typography-h1-font-weight: 300;
+  --typography-h1-line-height: 1.25;
+  --typography-h1-letter-spacing: -0.025em;
+  
+  --typography-h2-font-size: 1.875rem;
+  --typography-h2-font-weight: 400;
+  --typography-h2-line-height: 1.375;
+  --typography-h2-letter-spacing: normal;
+  
+  --typography-h3-font-size: 1.5rem;
+  --typography-h3-font-weight: 500;
+  --typography-h3-line-height: 1.375;
+  --typography-h3-letter-spacing: normal;
+  
+  --typography-h4-font-size: 1.25rem;
+  --typography-h4-font-weight: 500;
+  --typography-h4-line-height: 1.5;
+  --typography-h4-letter-spacing: normal;
+  
+  --typography-h5-font-size: 1.125rem;
+  --typography-h5-font-weight: 600;
+  --typography-h5-line-height: 1.5;
+  --typography-h5-letter-spacing: normal;
+  
+  --typography-h6-font-size: 1rem;
+  --typography-h6-font-weight: 600;
+  --typography-h6-line-height: 1.5;
+  --typography-h6-letter-spacing: 0.025em;
+  
+  /* Typography Presets - Body */
+  --typography-body-large-font-size: 1.25rem;
+  --typography-body-large-font-weight: 400;
+  --typography-body-large-line-height: 1.625;
+  --typography-body-large-letter-spacing: normal;
+  
+  --typography-body-medium-font-size: 1.125rem;
+  --typography-body-medium-font-weight: 400;
+  --typography-body-medium-line-height: 1.625;
+  --typography-body-medium-letter-spacing: normal;
+  
+  --typography-body-base-font-size: 1rem;
+  --typography-body-base-font-weight: 400;
+  --typography-body-base-line-height: 1.5;
+  --typography-body-base-letter-spacing: normal;
+  
+  --typography-body-small-font-size: 0.875rem;
+  --typography-body-small-font-weight: 400;
+  --typography-body-small-line-height: 1.5;
+  --typography-body-small-letter-spacing: normal;
+  
+  /* Typography Presets - UI */
+  --typography-button-large-font-size: 1.125rem;
+  --typography-button-large-font-weight: 500;
+  --typography-button-large-line-height: 1.25;
+  --typography-button-large-letter-spacing: normal;
+  
+  --typography-button-medium-font-size: 1rem;
+  --typography-button-medium-font-weight: 500;
+  --typography-button-medium-line-height: 1.25;
+  --typography-button-medium-letter-spacing: normal;
+  
+  --typography-caption-font-size: 0.875rem;
+  --typography-caption-font-weight: 400;
+  --typography-caption-line-height: 1.375;
+  --typography-caption-letter-spacing: normal;
+  
+  --typography-label-font-size: 0.75rem;
+  --typography-label-font-weight: 500;
+  --typography-label-line-height: 1.25;
+  --typography-label-letter-spacing: 0.025em;
+  
+  /* ======================
+     SPACING TOKENS
+     ====================== */
+  --spacing-0: 0;
+  --spacing-0-5: 0.125rem;      /* 2px */
+  --spacing-1: 0.25rem;         /* 4px */
+  --spacing-1-5: 0.375rem;      /* 6px */
+  --spacing-2: 0.5rem;          /* 8px */
+  --spacing-2-5: 0.625rem;      /* 10px */
+  --spacing-3: 0.75rem;         /* 12px */
+  --spacing-3-5: 0.875rem;      /* 14px */
+  --spacing-4: 1rem;            /* 16px */
+  --spacing-5: 1.25rem;         /* 20px */
+  --spacing-6: 1.5rem;          /* 24px */
+  --spacing-7: 1.75rem;         /* 28px */
+  --spacing-8: 2rem;            /* 32px */
+  --spacing-9: 2.25rem;         /* 36px */
+  --spacing-10: 2.5rem;         /* 40px */
+  --spacing-11: 2.75rem;        /* 44px */
+  --spacing-12: 3rem;           /* 48px */
+  --spacing-14: 3.5rem;         /* 56px */
+  --spacing-16: 4rem;           /* 64px */
+  --spacing-20: 5rem;           /* 80px */
+  --spacing-24: 6rem;           /* 96px */
+  --spacing-28: 7rem;           /* 112px */
+  --spacing-32: 8rem;           /* 128px */
+  --spacing-36: 9rem;           /* 144px */
+  --spacing-40: 10rem;          /* 160px */
+  --spacing-44: 11rem;          /* 176px */
+  --spacing-48: 12rem;          /* 192px */
+  --spacing-52: 13rem;          /* 208px */
+  --spacing-56: 14rem;          /* 224px */
+  --spacing-60: 15rem;          /* 240px */
+  --spacing-64: 16rem;          /* 256px */
+  --spacing-72: 18rem;          /* 288px */
+  --spacing-80: 20rem;          /* 320px */
+  --spacing-96: 24rem;          /* 384px */
+  
+  /* ======================
+     SHADOW TOKENS
+     ====================== */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  
+  /* ======================
+     BORDER RADIUS TOKENS
+     ====================== */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;         /* 2px */
+  --radius-base: 0.25rem;        /* 4px */
+  --radius-md: 0.375rem;         /* 6px */
+  --radius-lg: 0.5rem;           /* 8px */
+  --radius-xl: 0.75rem;          /* 12px */
+  --radius-2xl: 1rem;            /* 16px */
+  --radius-3xl: 1.5rem;          /* 24px */
+  --radius-full: 9999px;
+  
+  /* ======================
+     TRANSITION TOKENS
+     ====================== */
+  --transition-duration-fast: 150ms;
+  --transition-duration-normal: 200ms;
+  --transition-duration-slow: 300ms;
+  --transition-duration-slower: 500ms;
+  
+  --transition-timing-ease: ease;
+  --transition-timing-ease-in: ease-in;
+  --transition-timing-ease-out: ease-out;
+  --transition-timing-ease-in-out: ease-in-out;
+  --transition-timing-linear: linear;
+  
+  /* ======================
+     BREAKPOINT TOKENS
+     ====================== */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  
+  /* ======================
+     Z-INDEX TOKENS
+     ====================== */
+  --z-index-auto: auto;
+  --z-index-0: 0;
+  --z-index-10: 10;
+  --z-index-20: 20;
+  --z-index-30: 30;
+  --z-index-40: 40;
+  --z-index-50: 50;        /* Header/Navigation */
+  --z-index-60: 60;
+  --z-index-70: 70;
+  --z-index-80: 80;
+  --z-index-90: 90;
+  --z-index-100: 100;      /* Modals/Overlays */
+  
+  /* ======================
+     COMPONENT TOKENS
+     ====================== */
+  /* Button Tokens */
+  --button-primary-bg: #000000;
+  --button-primary-bg-hover: #262626;
+  --button-primary-text: #ffffff;
+  --button-primary-padding-x: 2rem;
+  --button-primary-padding-y: 0.75rem;
+  --button-primary-font-size: var(--typography-button-medium-font-size);
+  --button-primary-font-weight: var(--typography-button-medium-font-weight);
+  --button-primary-border-radius: var(--radius-base);
+  
+  --button-secondary-bg: var(--color-interactive-secondary);
+  --button-secondary-bg-hover: var(--color-interactive-secondary-hover);
+  --button-secondary-text: var(--color-text-inverse);
+  --button-secondary-text-hover: var(--color-text-inverse);
+  --button-secondary-border: 1px solid var(--color-text-primary);
+  --button-secondary-padding-x: 2rem;
+  --button-secondary-padding-y: 0.75rem;
+  --button-secondary-font-size: var(--typography-button-medium-font-size);
+  --button-secondary-font-weight: var(--typography-button-medium-font-weight);
+  --button-secondary-border-radius: var(--radius-base);
+  
+  /* Card Tokens */
+  --card-bg: var(--color-background-primary);
+  --card-border: 1px solid var(--color-border-primary);
+  --card-border-radius: var(--radius-lg);
+  --card-padding: var(--spacing-6);
+  --card-shadow: var(--shadow-base);
+  
+  --card-elevated-bg: var(--color-background-primary);
+  --card-elevated-border-radius: var(--radius-lg);
+  --card-elevated-padding: var(--spacing-8);
+  --card-elevated-shadow: var(--shadow-lg);
+  
+  /* Form Tokens */
+  --form-input-bg: #f8f8f8;
+  --form-input-text: var(--color-text-primary);
+  --form-input-border: 1px solid var(--color-border-primary);
+  --form-input-border-focus: var(--color-interactive-primary);
+  --form-input-border-radius: var(--radius-base);
+  --form-input-padding-x: var(--spacing-4);
+  --form-input-padding-y: var(--spacing-3);
+  --form-input-font-size: var(--font-size-base);
+  --form-input-line-height: var(--line-height-normal);
+  
+  --form-label-text: var(--color-text-primary);
+  --form-label-font-size: var(--typography-label-font-size);
+  --form-label-font-weight: var(--typography-label-font-weight);
+  --form-label-letter-spacing: var(--typography-label-letter-spacing);
+  --form-label-margin-bottom: var(--spacing-2);
+  
+  /* Layout Tokens */
+  --layout-container-max-width: 80rem;        /* 1280px */
+  --layout-container-padding-x-mobile: var(--spacing-4);
+  --layout-container-padding-x-tablet: var(--spacing-6);
+  --layout-container-padding-x-desktop: var(--spacing-8);
+  
+  --layout-section-padding-y-mobile: var(--spacing-12);
+  --layout-section-padding-y-tablet: var(--spacing-16);
+  --layout-section-padding-y-desktop: var(--spacing-20);
+  
+  --layout-grid-gap-mobile: var(--spacing-4);
+  --layout-grid-gap-tablet: var(--spacing-6);
+  --layout-grid-gap-desktop: var(--spacing-8);
+  
+  /* Legacy theme variables for compatibility */
+  --background: var(--color-background-primary);
+  --foreground: var(--color-text-primary);
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
-    --background: #ffffff;
-    --foreground: #171717;
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    
+    /* Invert some semantic colors for dark mode */
+    --color-background-primary: #000000;
+    --color-background-secondary: #171717;
+    --color-background-tertiary: #ffffff;
+    --color-background-overlay: rgba(0, 0, 0, 0.7);
+    
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #d4d4d4;
+    --color-text-tertiary: #a3a3a3;
+    --color-text-inverse: #000000;
+    --color-text-muted: #737373;
+    
+    --color-border-primary: #262626;
+    --color-border-secondary: #404040;
+    --color-border-dark: #d4d4d4;
+    
+    --color-interactive-primary: #ffffff;
+    --color-interactive-primary-hover: #e5e5e5;
+    --color-interactive-secondary-hover: #ffffff;
   }
+}
+
+/* ======================
+   BASE STYLES
+   ====================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-primary);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Typography Elements - HTML Headings */
+h1 {
+  font-size: var(--typography-h1-font-size);
+  font-weight: var(--typography-h1-font-weight);
+  line-height: var(--typography-h1-line-height);
+  letter-spacing: var(--typography-h1-letter-spacing);
+  margin: 0;
+}
+
+h2 {
+  font-size: var(--typography-h2-font-size);
+  font-weight: var(--typography-h2-font-weight);
+  line-height: var(--typography-h2-line-height);
+  letter-spacing: var(--typography-h2-letter-spacing);
+  margin: 0;
+}
+
+h3 {
+  font-size: var(--typography-h3-font-size);
+  font-weight: var(--typography-h3-font-weight);
+  line-height: var(--typography-h3-line-height);
+  letter-spacing: var(--typography-h3-letter-spacing);
+  margin: 0;
+}
+
+h4 {
+  font-size: var(--typography-h4-font-size);
+  font-weight: var(--typography-h4-font-weight);
+  line-height: var(--typography-h4-line-height);
+  letter-spacing: var(--typography-h4-letter-spacing);
+  margin: 0;
+}
+
+h5 {
+  font-size: var(--typography-h5-font-size);
+  font-weight: var(--typography-h5-font-weight);
+  line-height: var(--typography-h5-line-height);
+  letter-spacing: var(--typography-h5-letter-spacing);
+  margin: 0;
+}
+
+h6 {
+  font-size: var(--typography-h6-font-size);
+  font-weight: var(--typography-h6-font-weight);
+  line-height: var(--typography-h6-line-height);
+  letter-spacing: var(--typography-h6-letter-spacing);
+  margin: 0;
+}
+
+/* ======================
+   COMPONENT STYLES
+   ====================== */
+
+/* Button Components */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-duration-normal) var(--transition-timing-ease-in-out);
+  font-weight: var(--font-weight-medium);
+}
+
+.btn-primary {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  padding: var(--button-primary-padding-y) var(--button-primary-padding-x);
+  font-size: var(--button-primary-font-size);
+  font-weight: var(--button-primary-font-weight);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-primary:hover {
+  background-color: var(--button-primary-bg-hover);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  padding: var(--button-secondary-padding-y) var(--button-secondary-padding-x);
+  font-size: var(--button-secondary-font-size);
+  font-weight: var(--button-secondary-font-weight);
+  border: var(--button-secondary-border);
+  border-radius: var(--button-secondary-border-radius);
+}
+
+.btn-secondary:hover {
+  background-color: var(--button-secondary-bg-hover);
+  color: var(--button-secondary-text-hover);
+}
+
+/* Typography Components */
+.text-hero {
+  font-size: clamp(var(--font-size-4xl), 8vw, var(--typography-hero-large-font-size));
+  font-weight: var(--typography-hero-large-font-weight);
+  line-height: var(--typography-hero-large-line-height);
+  letter-spacing: var(--typography-hero-large-letter-spacing);
+}
+
+.text-headline {
+  font-size: clamp(var(--font-size-2xl), 4vw, var(--font-size-4xl));
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-snug);
+}
+
+.text-body-large {
+  font-size: var(--typography-body-large-font-size);
+  line-height: var(--typography-body-large-line-height);
+  color: var(--color-text-secondary);
+}
+
+.text-body {
+  font-size: var(--typography-body-medium-font-size);
+  line-height: var(--typography-body-medium-line-height);
+  color: var(--color-text-secondary);
+}
+
+/* Layout Components */
+.container {
+  max-width: var(--layout-container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--layout-container-padding-x-mobile);
+  padding-right: var(--layout-container-padding-x-mobile);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: var(--layout-container-padding-x-tablet);
+    padding-right: var(--layout-container-padding-x-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: var(--layout-container-padding-x-desktop);
+    padding-right: var(--layout-container-padding-x-desktop);
+  }
+}
+
+/* Card Components */
+.card {
+  background-color: var(--card-bg);
+  border-radius: var(--card-border-radius);
+  padding: var(--card-padding);
+  box-shadow: var(--card-shadow);
+  border: var(--card-border);
+}
+
+.card-elevated {
+  background-color: var(--card-elevated-bg);
+  border-radius: var(--card-elevated-border-radius);
+  padding: var(--card-elevated-padding);
+  box-shadow: var(--card-elevated-shadow);
+  border: none;
+}
+
+/* Form Components */
+.form-input {
+  background-color: var(--form-input-bg);
+  color: var(--form-input-text);
+  border: var(--form-input-border);
+  border-radius: var(--form-input-border-radius);
+  padding: var(--form-input-padding-y) var(--form-input-padding-x);
+  font-size: var(--form-input-font-size);
+  line-height: var(--form-input-line-height);
+  transition: border-color var(--transition-duration-normal) var(--transition-timing-ease-in-out);
+  width: 100%;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--form-input-border-focus);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-tertiary);
+  opacity: 1;
+}
+
+.form-input::-webkit-input-placeholder {
+  color: var(--color-text-tertiary);
+  opacity: 1;
+}
+
+.form-input::-moz-placeholder {
+  color: var(--color-text-tertiary);
+  opacity: 1;
+}
+
+.form-input:-ms-input-placeholder {
+  color: var(--color-text-tertiary);
+  opacity: 1;
+}
+
+/* For select elements specifically */
+select.form-input option:first-child {
+  color: var(--color-text-tertiary);
+}
+
+select.form-input:invalid {
+  color: var(--color-text-tertiary);
+}
+
+.form-label {
+  color: var(--form-label-text);
+  font-size: var(--form-label-font-size);
+  font-weight: var(--form-label-font-weight);
+  letter-spacing: var(--form-label-letter-spacing);
+  margin-bottom: var(--form-label-margin-bottom);
+  display: block;
+}
+
+/* ======================
+   UTILITY CLASSES
+   ====================== */
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  .bg-overlay {
+    background-color: var(--color-background-overlay);
+  }
+  
+  .transition-default {
+    transition: all var(--transition-duration-normal) var(--transition-timing-ease-in-out);
+  }
+  
+  .focus-ring {
+    outline: 2px solid var(--color-interactive-primary);
+    outline-offset: 2px;
+  }
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ======================
+   ANIMATIONS
+   ====================== */
+
+@keyframes heartBounce {
+  0% {
+    transform: scale(0) translateY(0);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(1.2) translateY(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2) translateY(-30px);
+    opacity: 0;
   }
 }
