@@ -42,7 +42,7 @@ export default function LinksPage() {
     },
     {
       name: "TikTok",
-      url: "https://www.tiktok.com/@_.timmy2times._",
+      url: "https://www.tiktok.com/@timwatts.art",
       icon: <TikTokIcon />,
       description: "Creative content"
     }

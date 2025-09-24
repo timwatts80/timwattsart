@@ -1,85 +1,64 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { neon } from '@neondatabase/serverless'
+import { neon } from '@neondatabase/serverless';
 
-const sql = neon(process.env.DATABASE_URL!)
-
-export async function POST(request: NextRequest) {
+export async function GET() {
   try {
-    const { artworkId } = await request.json()
-
-    if (!artworkId || typeof artworkId !== 'number') {
-      return NextResponse.json(
-        { error: 'Invalid artworkId' },
-        { status: 400 }
-      )
-    }
-
-    // Create a new like
-    await sql`INSERT INTO artwork_likes (artwork_id) VALUES (${artworkId})`
-
-    // Get the updated like count
-    const result = await sql`
-      SELECT COUNT(*) as count 
-      FROM artwork_likes 
-      WHERE artwork_id = ${artworkId}
-    `
+    const sql = neon(process.env.DATABASE_URL!);
     
-    const likeCount = parseInt(result[0].count)
-
-    return NextResponse.json({ 
-      success: true, 
-      likeCount 
-    })
-
+    // Get all artworks with their like counts
+    const artworks = await sql`
+      SELECT id, like_count
+      FROM artworks
+      ORDER BY id
+    `;
+    
+    // Convert to the format the frontend expects
+    const likeCounts: Record<number, number> = {};
+    artworks.forEach((artwork: any) => {
+      likeCounts[artwork.id] = artwork.like_count || 0;
+    });
+    
+    return Response.json({ likeCounts });
   } catch (error) {
-    console.error('Error liking artwork:', error)
-    return NextResponse.json(
-      { error: 'Failed to like artwork' },
-      { status: 500 }
-    )
+    console.error('Error fetching likes:', error);
+    return Response.json({ error: 'Failed to fetch likes' }, { status: 500 });
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const artworkId = searchParams.get('artworkId')
-
-    if (artworkId) {
-      // Get like count for specific artwork
-      const result = await sql`
-        SELECT COUNT(*) as count 
-        FROM artwork_likes 
-        WHERE artwork_id = ${parseInt(artworkId)}
-      `
-      
-      const likeCount = parseInt(result[0].count)
-      return NextResponse.json({ likeCount })
-    } else {
-      // Get like counts for all artworks
-      const result = await sql`
-        SELECT artwork_id, COUNT(*) as count 
-        FROM artwork_likes 
-        GROUP BY artwork_id
-      `
-
-      // Convert to object format { artworkId: count }
-      const likeCounts: { [key: number]: number } = {}
-      result.forEach((row: any) => {
-        likeCounts[parseInt(row.artwork_id)] = parseInt(row.count)
-      })
-
-      return NextResponse.json({ 
-        success: true, 
-        likeCounts 
-      })
+    const { artworkId } = await request.json();
+    
+    if (!artworkId || artworkId < 1 || artworkId > 14) {
+      return Response.json({ error: 'Invalid artwork ID' }, { status: 400 });
     }
-
+    
+    const sql = neon(process.env.DATABASE_URL!);
+    
+    // Increment the like count for the artwork (upsert)
+    const result = await sql`
+      INSERT INTO artworks (id, title, src, like_count)
+      VALUES (
+        ${artworkId}, 
+        ${'Artwork ' + artworkId}, 
+        ${'/images/TIM_IMG_' + artworkId.toString().padStart(3, '0') + '.png'}, 
+        1
+      )
+      ON CONFLICT (id)
+      DO UPDATE SET 
+        like_count = artworks.like_count + 1,
+        updated_at = CURRENT_TIMESTAMP
+      RETURNING like_count
+    `;
+    
+    const newLikeCount = result[0]?.like_count || 1;
+    
+    return Response.json({ 
+      success: true, 
+      artworkId, 
+      likeCount: newLikeCount 
+    });
   } catch (error) {
-    console.error('Error fetching likes:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch likes' },
-      { status: 500 }
-    )
+    console.error('Error incrementing like:', error);
+    return Response.json({ error: 'Failed to increment like' }, { status: 500 });
   }
 }
