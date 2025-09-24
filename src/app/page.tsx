@@ -88,7 +88,7 @@ function CommissionForm({ isOpen, onClose }: CommissionFormProps) {
                       id="name"
                       name="name"
                       required
-                      className="form-input"
+                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none text-black bg-white"
                       placeholder="Your name"
                     />
                   </div>
@@ -102,7 +102,7 @@ function CommissionForm({ isOpen, onClose }: CommissionFormProps) {
                       id="email"
                       name="email"
                       required
-                      className="form-input"
+                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none text-black bg-white"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -115,7 +115,7 @@ function CommissionForm({ isOpen, onClose }: CommissionFormProps) {
                       id="project"
                       name="project"
                       required
-                      className="form-input"
+                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none text-black bg-white"
                     >
                       <option value="">Select project type</option>
                       <option value="original">Original Artwork</option>
@@ -134,7 +134,7 @@ function CommissionForm({ isOpen, onClose }: CommissionFormProps) {
                       name="message"
                       required
                       rows={4}
-                      className="form-input"
+                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none text-black bg-white"
                       placeholder="Size, style, colors, timeline, budget range..."
                     />
                   </div>
