@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   trailingSlash: true,
-  output: 'export',
+  // Removed 'output: export' to enable server-side functionality for database
   images: {
     unoptimized: true
-  }
+  },
 }
 
 export default nextConfig
