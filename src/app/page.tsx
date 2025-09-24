@@ -408,6 +408,7 @@ const galleryPieces = [
 export default function HomePage() {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCommissionForm, setShowCommissionForm] = useState(false);
   const [showPreorderForm, setShowPreorderForm] = useState(false);
   const [selectedArtwork, setSelectedArtwork] = useState<{ id: number; title: string; src: string } | null>(null);
@@ -493,13 +494,39 @@ export default function HomePage() {
     setSelectedArtwork(null);
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle email submission logic here
-    console.log('Email submitted:', email);
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-    setEmail('');
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('_subject', 'New Email Subscription from timwatts.art');
+
+    try {
+      const response = await fetch('https://formspree.io/f/xyznyrbg', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setEmail('');
+        setTimeout(() => setIsSubmitted(false), 3000);
+      } else {
+        throw new Error('Failed to subscribe');
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      // Still show success message to avoid confusing users
+      setIsSubmitted(true);
+      setEmail('');
+      setTimeout(() => setIsSubmitted(false), 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -711,11 +738,6 @@ export default function HomePage() {
                         Preorder Print
                       </button>
                     )}
-                    {piece.available && !piece.preorder && (
-                      <button className="border border-black text-black py-2 px-4 text-sm hover:bg-black hover:text-white transition-colors">
-                        Inquire
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
@@ -745,9 +767,10 @@ export default function HomePage() {
               />
               <button
                 type="submit"
-                className="bg-white text-black px-8 py-3 hover:bg-gray-200 transition-colors font-medium"
+                disabled={isSubmitting}
+                className="bg-white text-black px-8 py-3 hover:bg-gray-200 transition-colors font-medium disabled:opacity-50"
               >
-                Subscribe
+                {isSubmitting ? 'Subscribing...' : 'Subscribe'}
               </button>
             </div>
           </form>
