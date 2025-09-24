@@ -903,7 +903,14 @@ export default function HomePage() {
                 </a>
               </div>
               <ul className="space-y-3 mt-4">
-                <li><a href="#commission" className="text-gray-300 hover:text-white transition-colors">Commission Work</a></li>
+                <li>
+                  <button 
+                    onClick={() => setShowCommissionForm(true)}
+                    className="text-gray-300 hover:text-white transition-colors text-left"
+                  >
+                    Commission Work
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
