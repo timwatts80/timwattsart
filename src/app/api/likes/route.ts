@@ -34,23 +34,21 @@ export async function POST(request: Request) {
     
     const sql = neon(process.env.DATABASE_URL!);
     
-    // Increment the like count for the artwork (upsert)
+    // Simply increment the like count for the existing artwork
     const result = await sql`
-      INSERT INTO artworks (id, title, src, like_count)
-      VALUES (
-        ${artworkId}, 
-        ${'Artwork ' + artworkId}, 
-        ${'/images/TIM_IMG_' + artworkId.toString().padStart(3, '0') + '.png'}, 
-        1
-      )
-      ON CONFLICT (id)
-      DO UPDATE SET 
-        like_count = artworks.like_count + 1,
+      UPDATE artworks 
+      SET 
+        like_count = like_count + 1,
         updated_at = CURRENT_TIMESTAMP
+      WHERE id = ${artworkId}
       RETURNING like_count
     `;
     
-    const newLikeCount = result[0]?.like_count || 1;
+    if (result.length === 0) {
+      return Response.json({ error: 'Artwork not found' }, { status: 404 });
+    }
+    
+    const newLikeCount = result[0].like_count;
     
     return Response.json({ 
       success: true, 
