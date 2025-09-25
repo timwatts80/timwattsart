@@ -319,6 +319,7 @@ export default function HomePage() {
   const [currentLightboxIndex, setCurrentLightboxIndex] = useState(0);
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lastTap, setLastTap] = useState<Record<number, number>>({});
 
   // Create hero images from first 5 artworks for lightbox
   const heroImages = artworks.slice(0, 5).map(artwork => ({
@@ -445,6 +446,21 @@ export default function HomePage() {
   const handleClosePreorderForm = () => {
     setShowPreorderForm(false);
     setSelectedArtwork(null);
+  };
+
+  const handleDoubleTap = (pieceId: number) => {
+    const now = Date.now();
+    const lastTapTime = lastTap[pieceId] || 0;
+    const timeDiff = now - lastTapTime;
+    
+    setLastTap(prev => ({ ...prev, [pieceId]: now }));
+    
+    // If double tap detected (within 300ms), trigger like
+    if (timeDiff < 300 && timeDiff > 0) {
+      handleLike(pieceId);
+      // Reset to prevent triple tap issues
+      setLastTap(prev => ({ ...prev, [pieceId]: 0 }));
+    }
   };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -677,7 +693,8 @@ export default function HomePage() {
                     <img 
                       src={piece.image_path} 
                       alt={piece.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover cursor-pointer"
+                      onTouchEnd={() => handleDoubleTap(piece.id)}
                     />
                   
                   {/* Animated heart in center */}
@@ -952,6 +969,23 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* CSS Animation Styles */}
+      <style jsx>{`
+        @keyframes heartBounce {
+          0% {
+            transform: scale(0);
+            opacity: 0;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </main>
   );
 }
