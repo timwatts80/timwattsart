@@ -723,15 +723,6 @@ export default function HomePage() {
                       </button>
                     </div>
                   )}
-                  
-                  {/* SOLD OUT overlay */}
-                  {!piece.available && (
-                    <div className="absolute top-3 right-3 z-10">
-                      <div className="bg-black text-white px-3 py-1 text-xs font-medium tracking-wide">
-                        SOLD OUT
-                      </div>
-                    </div>
-                  )}
                 </div>
                 
                 {/* Title and details below image */}
@@ -802,7 +793,7 @@ export default function HomePage() {
               <img 
                 src="/tim_signature_white.svg" 
                 alt="Tim Watts" 
-                className="h-12 w-auto mb-4"
+                className="h-20 w-auto mb-4"
               />
               <p className="text-gray-300 max-w-md leading-relaxed">
                 Contemporary artist exploring the intersection of emotion and form through 
