@@ -732,7 +732,7 @@ export default function HomePage() {
                   
                   {/* Action buttons */}
                   <div className="pt-2">
-                    {piece.available && piece.preorder && (
+                    {[1, 2, 3].includes(piece.id) && (
                       <button 
                         onClick={() => handlePreorderClick(piece.id, piece.title, piece.image_path)}
                         className="bg-black text-white py-2 px-4 text-sm hover:bg-gray-800 transition-colors"
