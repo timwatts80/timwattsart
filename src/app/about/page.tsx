@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 interface CommissionFormProps {
   isOpen: boolean;
@@ -161,88 +163,19 @@ function CommissionForm({ isOpen, onClose }: CommissionFormProps) {
 
 export default function About() {
   const [showCommissionForm, setShowCommissionForm] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-black/90 backdrop-blur-md z-50 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <a href="/" className="flex items-center">
-                <img 
-                  src="/tim_signature_white.svg" 
-                  alt="Tim Watts" 
-                  className="h-12 w-auto"
-                />
-              </a>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex space-x-8">
-              <a href="/#home" className="text-white hover:text-gray-300 transition-colors">Home</a>
-              <a href="/about" className="text-white hover:text-gray-300 transition-colors">About</a>
-              <a href="/links" className="text-white hover:text-gray-300 transition-colors">Links</a>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-white hover:text-gray-300 focus:outline-none focus:text-gray-300"
-                aria-label="Toggle menu"
-              >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  {mobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Navigation Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 bg-black/95 backdrop-blur-md border-t border-gray-800">
-                <a 
-                  href="/#home" 
-                  className="block px-3 py-2 text-white hover:text-gray-300 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Home
-                </a>
-                <a 
-                  href="/about" 
-                  className="block px-3 py-2 text-white hover:text-gray-300 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  About
-                </a>
-                <a 
-                  href="/links" 
-                  className="block px-3 py-2 text-white hover:text-gray-300 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Links
-                </a>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
-
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white font-sans">
+      <Header />
       {/* Hero Section */}
-      <div className="max-w-6xl mx-auto px-6 py-16 lg:py-24 pt-24 lg:pt-32">
+      <div className="max-w-6xl mx-auto px-6 py-16 lg:py-24 mt-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-              They call it chaos. I call it home.
+            <h1 className="text-4xl lg:text-5xl font-light mb-6 leading-tight">
+              A beautiful mess made perfect.
             </h1>
             <p className="text-lg text-gray-300 leading-relaxed">
-              My work lives in the tension between disorder and harmony, where thousands of lines converge into form, depth, and meaning. Each piece is both a meditation and an exploration. A way of capturing human emotion in its raw, layered complexity.
+              I turn artistic chaos into form. It's who I am. Imperfect, and real. My work lives in the tension between disorder and harmony, where thousands of lines converge into form, depth, and meaning. Each piece is both a meditation and an exploration. A way of capturing human emotion in its raw, layered complexity.
             </p>
           </div>
           <div className="flex justify-center md:justify-end">
@@ -363,6 +296,8 @@ export default function About() {
           </div>
         </div>
       </div>
+
+      <Footer />
 
       {/* Commission Form Modal */}
       <CommissionForm 
