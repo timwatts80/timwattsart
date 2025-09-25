@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Header from '@/components/Header';
 
 // Social media icon components
 const InstagramIcon = () => (
@@ -50,7 +51,8 @@ export default function LinksPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      <div className="container mx-auto px-4 py-16">
+      <Header />
+      <div className="container mx-auto px-4 py-16 mt-16">
         <div className="max-w-md mx-auto">
           {/* Profile Section */}
           <div className="text-center mb-16">
