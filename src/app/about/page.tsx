@@ -242,7 +242,7 @@ export default function About() {
               They call it chaos. I call it home.
             </h1>
             <p className="text-lg text-gray-300 leading-relaxed">
-              My work lives in the tension between disorder and harmony, where thousands of lines converge into form, depth, and meaning. Each piece is both a meditation and an exploration — a way of capturing human emotion in its raw, layered complexity.
+              My work lives in the tension between disorder and harmony, where thousands of lines converge into form, depth, and meaning. Each piece is both a meditation and an exploration. A way of capturing human emotion in its raw, layered complexity.
             </p>
           </div>
           <div className="flex justify-center md:justify-end">
@@ -267,7 +267,7 @@ export default function About() {
             I'm Tim Watts, a professional artist with a 20-year background in design and visual storytelling. After years working in digital and commercial design, I returned to my roots in traditional media — pen, ink, and graphite — to create works that are unapologetically human.
           </p>
           <p>
-            My style, which I call Neurolinealism, reflects both my personal journey and my fascination with how order emerges from chaos. Each line is intentional, yet unpredictable — just like the experiences that shape us.
+            My style, which I call Neurolinealism, reflects both my personal journey and my fascination with how order emerges from chaos. Each line is intentional, yet unpredictable. Just like the experiences that shape us.
           </p>
         </div>
       </div>
@@ -301,7 +301,7 @@ export default function About() {
       <div className="max-w-3xl mx-auto px-6 py-16 text-center">
         <h2 className="text-3xl font-bold mb-8">Why I Create</h2>
         <p className="text-lg text-gray-300 leading-relaxed">
-          Art is more than a product — it's a dialogue between artist and viewer. My goal is to create pieces that don't just hang on a wall, but live in the spaces where people reflect, feel, and connect.
+          Art is more than a product. It's a dialogue between artist and viewer. My goal is to create pieces that don't just hang on a wall, but live in the spaces where people reflect, feel, and connect.
         </p>
       </div>
 
@@ -312,7 +312,7 @@ export default function About() {
             href="/#gallery"
             className="bg-white text-black px-8 py-4 rounded-lg font-semibold text-center hover:bg-gray-200 transition-colors duration-300 flex-1 sm:flex-none"
           >
-            View the Collection →
+            View Gallery →
           </Link>
           <button
             onClick={() => setShowCommissionForm(true)}
@@ -352,7 +352,7 @@ export default function About() {
           <div className="border-b border-gray-700 pb-6">
             <h3 className="text-xl font-semibold mb-3">What do you need to get started?</h3>
             <p className="text-gray-300">
-              Just your vision and any reference materials that inspire you — I'll guide you through the rest.
+              Just your vision and any reference materials that inspire you. I'll guide you through the rest.
             </p>
           </div>
           <div className="pb-6">
