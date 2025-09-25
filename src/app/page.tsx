@@ -3,6 +3,17 @@
 import { useState, useEffect } from 'react';
 import PreorderForm from '@/components/PreorderForm';
 
+// Types
+type Artwork = {
+  id: number;
+  title: string;
+  medium: string;
+  image_path: string;
+  available: boolean;
+  preorder: boolean;
+  likes: number;
+};
+
 interface CommissionFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -293,131 +304,6 @@ const artCollections = [
   }
 ];
 
-// Gallery pieces with more details
-const galleryPieces = [
-  { 
-    id: 1, 
-    title: 'Endless Depths', 
-    medium: 'Acrylic on Canvas',
-    available: true,
-    preorder: true,
-    src: '/images/TIM_IMG_001.png'
-  },
-  { 
-    id: 2, 
-    title: 'Distant Horizon', 
-    medium: 'Mixed Media',
-    available: true,
-    preorder: true,
-    src: '/images/TIM_IMG_002.png'
-  },
-  { 
-    id: 3, 
-    title: 'Flowing Dreams', 
-    medium: 'Oil on Canvas',
-    available: true,
-    preorder: true,
-    src: '/images/TIM_IMG_003.png'
-  },
-  { 
-    id: 4, 
-    title: 'Silent Whispers', 
-    medium: 'Watercolor',
-    available: true,
-    preorder: false,
-    src: '/images/TIM_IMG_004.png'
-  },
-  { 
-    id: 5, 
-    title: 'Quiet Reverie', 
-    medium: 'Digital Print',
-    available: true,
-    preorder: true,
-    src: '/images/TIM_IMG_005.png'
-  },
-  { 
-    id: 6, 
-    title: 'Endless Flow', 
-    medium: 'Charcoal on Paper',
-    available: true,
-    preorder: true,
-    src: '/images/TIM_IMG_006.png'
-  },
-  { 
-    id: 7, 
-    title: 'Gentle Reflections', 
-    medium: 'Acrylic on Canvas',
-    available: true,
-    preorder: true,
-    src: '/images/TIM_IMG_007.png'
-  },
-  { 
-    id: 8, 
-    title: 'Falling Cascade', 
-    medium: 'Mixed Media',
-    available: true,
-    preorder: false,
-    src: '/images/TIM_IMG_008.png'
-  },
-  { 
-    id: 9, 
-    title: 'Peaceful Solitude', 
-    medium: 'Oil on Canvas',
-    available: true,
-    preorder: false,
-    src: '/images/TIM_IMG_009.png'
-  },
-  { 
-    id: 10, 
-    title: 'Pure Essence', 
-    medium: 'Mixed Media',
-    available: true,
-    preorder: false,
-    src: '/images/TIM_IMG_010.png'
-  },
-  { 
-    id: 11, 
-    title: 'Rising Momentum', 
-    medium: 'Acrylic on Canvas',
-    available: true,
-    preorder: false,
-    src: '/images/TIM_IMG_011.png'
-  },
-  { 
-    id: 12, 
-    title: 'Sacred Passage', 
-    medium: 'Digital Print',
-    available: true,
-    preorder: false,
-    src: '/images/TIM_IMG_012.png'
-  },
-  { 
-    id: 13, 
-    title: 'Morning Awakening', 
-    medium: 'Oil on Canvas',
-    available: true,
-    preorder: false,
-    src: '/images/TIM_IMG_013.png'
-  },
-  { 
-    id: 14, 
-    title: 'Inner Transformation', 
-    medium: 'Acrylic on Canvas',
-    available: true,
-    preorder: false,
-    src: '/images/TIM_IMG_014.png'
-  },
-];
-
-// Hero images for lightbox
-const heroImages = [
-  { src: "/images/TIM_IMG_001.png", title: "Artwork 1" },
-  { src: "/images/TIM_IMG_002.png", title: "Artwork 2" },
-  { src: "/images/TIM_IMG_003.png", title: "Artwork 3" },
-  { src: "/images/TIM_IMG_004.png", title: "Artwork 4" },
-  { src: "/images/TIM_IMG_005.png", title: "Artwork 5" },
-];
-
 export default function HomePage() {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -431,23 +317,37 @@ export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentLightboxIndex, setCurrentLightboxIndex] = useState(0);
+  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Create hero images from first 5 artworks for lightbox
+  const heroImages = artworks.slice(0, 5).map(artwork => ({
+    src: artwork.image_path,
+    title: artwork.title
+  }));
 
   useEffect(() => {
     setMounted(true);
-    // Load likes from database instead of localStorage
-    fetch('/api/likes/')
+    
+    // Load artworks and likes from database
+    fetch('/api/artworks/')
       .then(async res => {
-        if (!res.ok) {
-          throw new Error(`API returned ${res.status}: ${res.statusText}`);
+        if (res.ok) {
+          const artworkData = await res.json();
+          setArtworks(artworkData);
+          
+          // Convert to likes format for existing like functionality
+          const likesData: Record<number, number> = {};
+          artworkData.forEach((artwork: Artwork) => {
+            likesData[artwork.id] = artwork.likes;
+          });
+          setLikes(likesData);
         }
-        const data = await res.json();
-        if (data.likeCounts) {
-          setLikes(data.likeCounts);
-        }
+        setLoading(false);
       })
       .catch(error => {
-        console.error('Failed to load likes:', error);
-        // Continue with empty likes object - this is not critical for the app
+        console.error('Error loading artworks:', error);
+        setLoading(false);
       });
   }, []);
 
@@ -766,14 +666,19 @@ export default function HomePage() {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {galleryPieces.map((piece) => (
-              <div key={piece.id} className="group relative">
-                <div className="aspect-[3/4] bg-gray-200 overflow-hidden relative mb-4">
-                  <img 
-                    src={piece.src} 
-                    alt={piece.title}
-                    className="w-full h-full object-cover"
-                  />
+            {loading ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-600">Loading artworks...</p>
+              </div>
+            ) : (
+              artworks.map((piece) => (
+                <div key={piece.id} className="group relative">
+                  <div className="aspect-[3/4] bg-gray-200 overflow-hidden relative mb-4">
+                    <img 
+                      src={piece.image_path} 
+                      alt={piece.title}
+                      className="w-full h-full object-cover"
+                    />
                   
                   {/* Animated heart in center */}
                   {mounted && heartAnimations[piece.id] && (
@@ -838,7 +743,7 @@ export default function HomePage() {
                   <div className="pt-2">
                     {piece.available && piece.preorder && (
                       <button 
-                        onClick={() => handlePreorderClick(piece.id, piece.title, piece.src)}
+                        onClick={() => handlePreorderClick(piece.id, piece.title, piece.image_path)}
                         className="bg-black text-white py-2 px-4 text-sm hover:bg-gray-800 transition-colors"
                       >
                         Preorder Print
@@ -847,7 +752,8 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
         </div>
       </section>
