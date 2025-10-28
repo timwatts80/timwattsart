@@ -170,8 +170,8 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
               </>
             ) : (
               <div className="text-center py-4">
-                <div className="text-4xl mb-4">✓</div>
-                <h3 className="text-xl font-light mb-2">You're on the list!</h3>
+                <div className="text-4xl mb-4 text-black">✓</div>
+                <h3 className="text-xl font-light mb-2 text-black">You're on the list!</h3>
                 <p className="text-gray-600 text-sm">
                   Check your email for confirmation. I'll notify you when prints of this artwork are ready to order.
                 </p>

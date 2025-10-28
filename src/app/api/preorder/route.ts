@@ -59,7 +59,7 @@ async function sendConfirmationEmail(email: string, name: string, artworkTitle: 
     const emailData = {
       sender: {
         name: 'Tim Watts',
-        email: 'tim@onemorelight.cc'
+        email: 'info@timwatts.art'
       },
       to: [
         {
@@ -156,7 +156,7 @@ async function sendNotificationEmail(name: string, email: string, artworkTitle: 
     const emailData = {
       sender: {
         name: 'Tim Watts Art Website',
-        email: 'tim@onemorelight.cc'
+        email: 'info@timwatts.art'
       },
       to: [
         {
