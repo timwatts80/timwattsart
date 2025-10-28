@@ -35,8 +35,9 @@
 - Keeps sensitive data out of the codebase
 
 ## 🔑 Your Brevo API Key
+Add your Brevo API key to the `.env` file:
 ```
-your_actual_brevo_api_key_here
+BREVO_API_KEY="your_actual_brevo_api_key_here"
 ```
 
 ## 📧 How It Works
