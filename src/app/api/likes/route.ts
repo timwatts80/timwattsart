@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   try {
     const { artworkId } = await request.json();
     
-    if (!artworkId || artworkId < 1 || artworkId > 14) {
+    if (!artworkId || artworkId < 1) {
       return Response.json({ error: 'Invalid artwork ID' }, { status: 400 });
     }
     
