@@ -78,7 +78,7 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
           <div className="p-8">
             {!isSubmitted ? (
               <>
-                <h2 className="text-2xl font-light mb-4">Print Notification</h2>
+                <h2 className="text-2xl font-light mb-4 text-black">Preorder Limited Edition Print</h2>
                 
                 {/* Artwork Preview */}
                 <div className="flex items-center gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
@@ -96,6 +96,13 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
                 <p className="text-gray-600 text-sm mb-6">
                   Get notified when prints of this artwork are ready. No commitment required.
                 </p>
+
+                {/* Discount Notice */}
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-black text-sm font-medium">
+                    Special Offer: All preorders will receive 20% off their order placed before Nov 27, 2025 (Thanksgiving)
+                  </p>
+                </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
@@ -156,7 +163,7 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
                       className="btn-primary flex-1"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Sending...' : 'Notify Me'}
+                      {isSubmitting ? 'Sending...' : 'Preorder Now'}
                     </button>
                   </div>
                 </form>

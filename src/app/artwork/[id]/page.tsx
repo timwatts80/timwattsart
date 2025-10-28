@@ -30,6 +30,7 @@ type ArtworkDetails = {
 export default function ArtworkPage() {
   const params = useParams();
   const [artwork, setArtwork] = useState<ArtworkDetails | null>(null);
+  const [relatedArtworks, setRelatedArtworks] = useState<ArtworkDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showPreorderForm, setShowPreorderForm] = useState(false);
@@ -54,8 +55,25 @@ export default function ArtworkPage() {
       }
     };
 
+    const fetchRelatedArtworks = async () => {
+      try {
+        const response = await fetch('/api/artworks/');
+        if (response.ok) {
+          const allArtworks = await response.json();
+          // Filter out current artwork and randomize
+          const filtered = allArtworks.filter((art: ArtworkDetails) => art.id !== parseInt(params.id as string));
+          // Shuffle array and take first 4
+          const shuffled = filtered.sort(() => 0.5 - Math.random());
+          setRelatedArtworks(shuffled.slice(0, 4));
+        }
+      } catch (error) {
+        console.error('Error fetching related artworks:', error);
+      }
+    };
+
     if (params.id) {
       fetchArtwork();
+      fetchRelatedArtworks();
     }
   }, [params.id]);
 
@@ -210,6 +228,7 @@ export default function ArtworkPage() {
               
               {/* Title and Basic Info */}
               <div>
+                <p className="text-xl text-gray-600 mb-2 font-medium">TIM WATTS</p>
                 <h1 className="text-4xl md:text-5xl font-light mb-4 text-gray-900">
                   {artwork.title}
                 </h1>
@@ -230,27 +249,35 @@ export default function ArtworkPage() {
               {/* Availability and Actions */}
               <div className="space-y-4">
                 {artwork.preorder && (
-                  <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                      Print Available
-                    </span>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-white">
+                        Print Available
+                      </span>
+                    </div>
+                    <div className="text-gray-700">
+                      <ul className="list-disc list-inside space-y-1 text-base">
+                        <li>Only 25 Limited Edition Prints</li>
+                        <li className="text-green-600 font-medium">Preorder now and get 20% off order placed before Nov 27, 2025</li>
+                      </ul>
+                    </div>
                   </div>
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
                   {artwork.preorder && (
                     <button
                       onClick={handlePreorderClick}
-                      className="bg-gray-900 text-white px-8 py-3 hover:bg-black transition-colors font-medium"
+                      className="w-full sm:w-auto bg-gray-900 text-white px-8 py-3 hover:bg-black transition-colors font-medium"
                     >
-                      Order Print
+                      Preorder Limited Edition Print (20% off)
                     </button>
                   )}
                   
                   <Link
                     href="/gallery"
-                    className="border border-gray-300 text-gray-700 px-8 py-3 hover:bg-gray-50 transition-colors font-medium"
+                    className="w-full sm:w-auto text-center border border-gray-300 text-gray-700 px-8 py-3 hover:bg-gray-50 transition-colors font-medium"
                   >
                     Back to Gallery
                   </Link>
@@ -259,7 +286,7 @@ export default function ArtworkPage() {
 
               {/* Artist's Story Section */}
               {artwork.story && (
-                <div className="bg-gray-50 p-8 rounded-lg">
+                <div className="bg-gray-100 p-8 rounded-lg">
                   <h3 className="text-2xl font-light mb-4 text-gray-900">The Story Behind the Art</h3>
                   <div className="prose prose-gray max-w-none">
                     <p className="text-gray-700 leading-relaxed whitespace-pre-line">
@@ -274,10 +301,103 @@ export default function ArtworkPage() {
                   )}
                 </div>
               )}
+
+              {/* What's Included Section - Only for preorder items */}
+              {artwork.preorder && (
+                <div className="bg-white border border-gray-200 p-8 rounded-lg">
+                  <h3 className="text-2xl font-light mb-6 text-gray-900">What's Included</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                      </svg>
+                      <div>
+                        <h4 className="font-medium text-gray-900">High-Quality Giclée Print</h4>
+                        <p className="text-gray-600 text-sm">Museum-quality archival print on premium paper</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                      </svg>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Certificate of Authenticity</h4>
+                        <p className="text-gray-600 text-sm">Hand-signed certificate with unique edition number</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                      </svg>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Protective Packaging</h4>
+                        <p className="text-gray-600 text-sm">Carefully packaged with archival materials for safe delivery</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                      </svg>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Limited Edition Status</h4>
+                        <p className="text-gray-600 text-sm">Part of a strictly limited print run - each piece is numbered</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-black mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                      </svg>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Artist's Personal Touch</h4>
+                        <p className="text-gray-600 text-sm">Hand-signed by the artist with a personal note</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Note about frame not included */}
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <p className="text-sm text-gray-500 italic">
+                      <strong>Note:</strong> Frame not included. Print is ready for your choice of framing.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
+
+      {/* You May Also Like Section */}
+      {relatedArtworks.length > 0 && (
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-light text-center mb-12 text-gray-900">You May Also Like</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {relatedArtworks.map((relatedArt) => (
+                <Link key={relatedArt.id} href={`/artwork/${relatedArt.id}`}>
+                  <div className="group cursor-pointer">
+                    <div className="aspect-[3/4] bg-gray-200 overflow-hidden mb-3 hover:shadow-lg transition-shadow">
+                      <img 
+                        src={relatedArt.image_path} 
+                        alt={relatedArt.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <h3 className="text-lg font-light text-gray-900 group-hover:text-gray-600 transition-colors">
+                      {relatedArt.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">{relatedArt.medium}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <Footer />
 
