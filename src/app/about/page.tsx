@@ -172,7 +172,7 @@ export default function About() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <h1 className="text-4xl lg:text-5xl font-light mb-6 leading-tight">
-              A beautiful mess made perfect.
+              A Beautiful Mess Made Visible
             </h1>
             <p className="text-lg text-gray-300 leading-relaxed">
               I turn artistic chaos into form. It's who I am. Imperfect, and real. My work lives in the tension between disorder and harmony, where thousands of lines converge into form, depth, and meaning. Each piece is both a meditation and an exploration. A way of capturing human emotion in its raw, layered complexity.

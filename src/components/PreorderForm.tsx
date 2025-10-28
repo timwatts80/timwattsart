@@ -28,28 +28,26 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
     formData.append('artworkId', artworkId.toString())
 
     try {
-      // Use the same Formspree endpoint as commission form
-      const response = await fetch('https://formspree.io/f/xyznyrbg', {
+      // Use our new Brevo preorder API endpoint
+      const response = await fetch('/api/preorder', {
         method: 'POST',
         body: formData,
-        headers: {
-          Accept: 'application/json',
-        },
       })
 
       if (response.ok) {
         setIsSubmitted(true)
         form.reset()
-        // Close modal after 2 seconds
+        // Close modal after 3 seconds
         setTimeout(() => {
           onClose()
           setIsSubmitted(false)
-        }, 2000)
+        }, 3000)
       } else {
-        throw new Error('Failed to send preorder')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to send preorder request')
       }
     } catch (err) {
-      setError('Failed to send preorder. Please try again.')
+      setError('Failed to send preorder request. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -168,7 +166,7 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
                 <div className="text-4xl mb-4">✓</div>
                 <h3 className="text-xl font-light mb-2">You're on the list!</h3>
                 <p className="text-gray-600 text-sm">
-                  I'll notify you when prints of this artwork are ready to order.
+                  Check your email for confirmation. I'll notify you when prints of this artwork are ready to order.
                 </p>
               </div>
             )}

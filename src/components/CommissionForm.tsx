@@ -21,27 +21,26 @@ export default function CommissionForm({ isOpen, onClose }: CommissionFormProps)
     const formData = new FormData(form);
 
     try {
-      const response = await fetch('https://formspree.io/f/xyznyrbg', {
+      // Use our new Brevo commission API endpoint
+      const response = await fetch('/api/commission', {
         method: 'POST',
         body: formData,
-        headers: {
-          Accept: 'application/json',
-        },
       });
 
       if (response.ok) {
         setIsSubmitted(true);
         form.reset();
-        // Close modal after 2 seconds
+        // Close modal after 3 seconds
         setTimeout(() => {
           onClose();
           setIsSubmitted(false);
-        }, 2000);
+        }, 3000);
       } else {
-        throw new Error('Failed to send message');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send commission inquiry');
       }
     } catch (err) {
-      setError('Failed to send message. Please try again.');
+      setError('Failed to send inquiry. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -87,7 +86,8 @@ export default function CommissionForm({ isOpen, onClose }: CommissionFormProps)
                       id="name"
                       name="name"
                       required
-                      className="form-input"
+                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none bg-white"
+                      style={{ color: '#000000' }}
                       placeholder="Your name"
                     />
                   </div>
@@ -101,7 +101,8 @@ export default function CommissionForm({ isOpen, onClose }: CommissionFormProps)
                       id="email"
                       name="email"
                       required
-                      className="form-input"
+                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none bg-white"
+                      style={{ color: '#000000' }}
                       placeholder="your@email.com"
                     />
                   </div>
@@ -114,7 +115,8 @@ export default function CommissionForm({ isOpen, onClose }: CommissionFormProps)
                       id="project"
                       name="project"
                       required
-                      className="form-input"
+                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none bg-white"
+                      style={{ color: '#000000' }}
                     >
                       <option value="">Select project type</option>
                       <option value="original">Original Artwork</option>
@@ -133,7 +135,8 @@ export default function CommissionForm({ isOpen, onClose }: CommissionFormProps)
                       name="message"
                       required
                       rows={4}
-                      className="form-input"
+                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none bg-white"
+                      style={{ color: '#000000' }}
                       placeholder="Size, style, colors, timeline, budget range..."
                     />
                   </div>
@@ -171,7 +174,7 @@ export default function CommissionForm({ isOpen, onClose }: CommissionFormProps)
                 <div className="text-4xl mb-4">✓</div>
                 <h3 className="text-xl font-light mb-2">Message Sent!</h3>
                 <p className="text-gray-600 text-sm">
-                  Thank you for your interest. I'll respond within 24 hours.
+                  Check your email for confirmation. I'll respond within 24 hours.
                 </p>
               </div>
             )}

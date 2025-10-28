@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PreorderForm from '@/components/PreorderForm';
+import CommissionForm from '@/components/CommissionForm';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -15,186 +16,6 @@ type Artwork = {
   preorder: boolean;
   likes: number;
 };
-
-interface CommissionFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-function CommissionForm({ isOpen, onClose }: CommissionFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError('');
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    try {
-      const response = await fetch('https://formspree.io/f/xyznyrbg', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Accept: 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        setIsSubmitted(true);
-        form.reset();
-        // Close modal after 2 seconds
-        setTimeout(() => {
-          onClose();
-          setIsSubmitted(false);
-        }, 2000);
-      } else {
-        throw new Error('Failed to send message');
-      }
-    } catch (err) {
-      setError('Failed to send message. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      
-      {/* Modal */}
-      <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg shadow-2xl w-full max-w-md relative">
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl leading-none"
-            aria-label="Close"
-          >
-            ×
-          </button>
-
-          <div className="p-8">
-            {!isSubmitted ? (
-              <>
-                <h2 className="text-2xl font-light mb-2">Commission Inquiry</h2>
-                <p className="text-gray-600 text-sm mb-6">
-                  Tell me about your vision and I'll get back to you within 24 hours.
-                </p>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="form-label">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none text-black bg-white"
-                      placeholder="Your name"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="form-label">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none text-black bg-white"
-                      placeholder="your@email.com"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="project" className="form-label">
-                      Project Type
-                    </label>
-                    <select
-                      id="project"
-                      name="project"
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none text-black bg-white"
-                    >
-                      <option value="">Select project type</option>
-                      <option value="original">Original Artwork</option>
-                      <option value="print">Custom Print</option>
-                      <option value="series">Series Commission</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="form-label">
-                      Tell me about your vision
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={4}
-                      className="w-full px-4 py-3 border border-gray-300 rounded focus:border-black focus:outline-none text-black bg-white"
-                      placeholder="Size, style, colors, timeline, budget range..."
-                    />
-                  </div>
-
-                  {/* Hidden field for form identification */}
-                  <input type="hidden" name="_subject" value="New Commission Inquiry from timwatts.art" />
-                  
-                  {error && (
-                    <div className="text-red-600 text-sm">
-                      {error}
-                    </div>
-                  )}
-
-                  <div className="flex gap-3 pt-2">
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="btn-secondary flex-1"
-                      disabled={isSubmitting}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="btn-primary flex-1"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Sending...' : 'Send Inquiry'}
-                    </button>
-                  </div>
-                </form>
-              </>
-            ) : (
-              <div className="text-center py-4">
-                <div className="text-4xl mb-4">✓</div>
-                <h3 className="text-xl font-light mb-2">Message Sent!</h3>
-                <p className="text-gray-600 text-sm">
-                  Thank you for your interest. I'll respond within 24 hours.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
 
 // Mobile Mosaic Component - Scalable version
 function MobileMosaic({ onImageClick }: { onImageClick: (index: number) => void }) {
@@ -530,7 +351,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="flex space-x-4">
-                  <a href="#gallery" className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition-colors inline-block text-center">
+                  <a href="/gallery" className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition-colors inline-block text-center">
                     View Gallery
                   </a>
                   <button 
@@ -588,7 +409,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <a href="#gallery" className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition-colors inline-block text-center">
+              <a href="/gallery" className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition-colors inline-block text-center">
                 View Gallery
               </a>
               <button className="border border-black text-black px-8 py-3 hover:bg-black hover:text-white transition-colors">
@@ -604,98 +425,127 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section id="gallery" className="py-20 bg-white">
+      {/* Prints Available for Preorder Section - Above Gallery */}
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-light mb-4">Gallery</h2>
+            <h2 className="text-4xl font-light mb-4">Limited Edition Prints</h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              A curated selection of contemporary works exploring themes of identity, technology, and human connection.
+              High-quality giclée prints of select works, available for preorder. Each print is numbered and signed.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Three-column grid for the 3 preorder pieces */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {loading ? (
               <div className="col-span-full text-center py-12">
-                <p className="text-gray-600">Loading artworks...</p>
+                <p className="text-gray-600">Loading prints...</p>
               </div>
             ) : (
-              artworks.map((piece) => (
+              artworks.filter(piece => piece.preorder).map((piece) => (
                 <div key={piece.id} className="group relative">
-                  <div className="aspect-[3/4] bg-gray-200 overflow-hidden relative mb-4">
+                  {/* Standard size image for prints in 3-column grid */}
+                  <div className="aspect-[3/4] bg-gray-200 overflow-hidden relative mb-6 shadow-lg">
                     <img 
                       src={piece.image_path} 
                       alt={piece.title}
-                      className="w-full h-full object-cover cursor-pointer"
+                      className="w-full h-full object-cover cursor-pointer transform group-hover:scale-105 transition-transform duration-300"
                       onTouchEnd={() => handleDoubleTap(piece.id)}
                     />
-                  
-                  {/* Animated heart in center */}
-                  {mounted && heartAnimations[piece.id] && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                      <svg
-                        width="60"
-                        height="60"
-                        viewBox="0 0 24 24"
-                        fill="#ef4444"
-                        className="drop-shadow-lg"
-                        style={{
-                          animation: 'heartBounce 0.6s ease-out'
-                        }}
-                      >
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                      </svg>
+                    
+                    {/* Preorder badge */}
+                    <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 text-sm font-medium">
+                      Limited Edition
                     </div>
-                  )}
                   
-                  {/* Like button and counter - bottom left */}
-                  {mounted && (
-                    <div className="absolute bottom-3 left-3 z-10">
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleLike(piece.id);
-                        }}
-                        className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white px-3 py-2 rounded-full hover:bg-black/80 transition-colors"
-                      >
+                    {/* Animated heart in center */}
+                    {mounted && heartAnimations[piece.id] && (
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
                         <svg
-                          width="20"
-                          height="20"
+                          width="60"
+                          height="60"
                           viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          className="text-red-500 hover:scale-110 transition-transform"
+                          fill="#ef4444"
+                          className="drop-shadow-lg"
+                          style={{
+                            animation: 'heartBounce 0.6s ease-out'
+                          }}
                         >
-                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                         </svg>
-                        <span className="text-sm font-medium">{likes[piece.id] || 0}</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Title and details below image */}
-                <div className="space-y-2">
-                  <h3 className="text-xl font-light text-gray-900">{piece.title}</h3>
-                  <p className="text-sm text-gray-600">{piece.medium}</p>
-                  
-                  {/* Action buttons */}
-                  <div className="pt-2">
-                    {[1, 2, 3].includes(piece.id) && (
-                      <button 
-                        onClick={() => handlePreorderClick(piece.id, piece.title, piece.image_path)}
-                        className="bg-black text-white py-2 px-4 text-sm hover:bg-gray-800 transition-colors"
-                      >
-                        Preorder Print
-                      </button>
+                      </div>
+                    )}
+                    
+                    {/* Like button and counter - bottom left */}
+                    {mounted && (
+                      <div className="absolute bottom-3 left-3 z-10">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleLike(piece.id);
+                          }}
+                          className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white px-3 py-2 rounded-full hover:bg-black/80 transition-colors"
+                        >
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            className="text-red-500 hover:scale-110 transition-transform"
+                          >
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                          </svg>
+                          <span className="text-sm font-medium">{likes[piece.id] || 0}</span>
+                        </button>
+                      </div>
                     )}
                   </div>
+                  
+                  {/* Title and details below image */}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-xl font-light text-gray-900">{piece.title}</h3>
+                      <p className="text-gray-600">{piece.medium}</p>
+                    </div>
+                    
+                    {/* Print details */}
+                    <div className="space-y-1 text-sm text-gray-600">
+                      <p>• Limited edition of 50 prints</p>
+                      <p>• High-quality giclée on archival paper</p>
+                      <p>• Signed and numbered by the artist</p>
+                      <p>• Multiple sizes available</p>
+                    </div>
+                    
+                    {/* Preorder button */}
+                    <button 
+                      onClick={() => handlePreorderClick(piece.id, piece.title, piece.image_path)}
+                      className="w-full bg-black text-white py-3 px-6 text-lg font-medium hover:bg-gray-800 transition-colors transform hover:scale-105 duration-200"
+                    >
+                      Preorder Print
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))
             )}
           </div>
+        </div>
+      </section>
+
+      {/* View Artwork CTA Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-light mb-4">Explore My Complete Collection</h2>
+          <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+            Discover the full range of my contemporary works. Each piece tells a unique story through color, form, and emotion.
+          </p>
+          <a 
+            href="/gallery" 
+            className="inline-block bg-black text-white px-8 py-4 text-lg hover:bg-gray-800 transition-colors"
+          >
+            View My Artwork
+          </a>
         </div>
       </section>
 
@@ -746,6 +596,13 @@ export default function HomePage() {
           artworkSrc={selectedArtwork.src}
         />
       )}
+
+      {/* Commission Form */}
+      <CommissionForm
+        isOpen={showCommissionForm}
+        onClose={() => setShowCommissionForm(false)}
+      />
+
       {/* Hero Lightbox */}
       {lightboxOpen && (
         <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50" onClick={closeLightbox}>

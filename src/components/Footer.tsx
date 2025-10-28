@@ -30,6 +30,7 @@ export default function Footer() {
               <h3 className="text-white font-medium mb-4">Navigation</h3>
               <ul className="space-y-3">
                 <li><a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
+                <li><a href="/gallery" className="text-gray-300 hover:text-white transition-colors">Gallery</a></li>
                 <li><a href="/about" className="text-gray-300 hover:text-white transition-colors">About Me</a></li>
                 <li><a href="/links" className="text-gray-300 hover:text-white transition-colors">Links</a></li>
               </ul>

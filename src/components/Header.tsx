@@ -32,6 +32,7 @@ export default function Header({ className = '' }: HeaderProps) {
             {/* Desktop Navigation */}
             <div className="hidden md:flex space-x-8">
               <a href="/" className="text-white hover:text-gray-300 transition-colors">Home</a>
+              <a href="/gallery" className="text-white hover:text-gray-300 transition-colors">Gallery</a>
               <a href="/about" className="text-white hover:text-gray-300 transition-colors">About Me</a>
               <a href="/links" className="text-white hover:text-gray-300 transition-colors">Links</a>
             </div>
@@ -64,6 +65,13 @@ export default function Header({ className = '' }: HeaderProps) {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Home
+                </a>
+                <a 
+                  href="/gallery" 
+                  className="block px-3 py-2 text-white hover:text-gray-300 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Gallery
                 </a>
                 <a 
                   href="/about" 
