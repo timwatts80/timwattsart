@@ -82,7 +82,7 @@ export async function GET(
         ...artwork,
         story: 'This is a beautiful piece from my collection. Each artwork tells a unique story of creativity and artistic exploration.',
         dimensions: 'Contact for details',
-        year: 2024,
+        year: 2025,
         technique: 'Mixed media',
         inspiration: 'Inspired by the beauty of artistic expression',
         certificate_id: `TWA-${artwork.id.toString().padStart(4, '0')}`

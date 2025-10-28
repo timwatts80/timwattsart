@@ -229,21 +229,13 @@ export default function ArtworkPage() {
 
               {/* Availability and Actions */}
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    artwork.available 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
-                  }`}>
-                    {artwork.available ? 'Available' : 'Sold'}
-                  </span>
-                  
-                  {artwork.preorder && (
+                {artwork.preorder && (
+                  <div className="flex items-center gap-3">
                     <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                       Print Available
                     </span>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* Action Buttons */}
                 <div className="flex gap-4">
@@ -282,77 +274,6 @@ export default function ArtworkPage() {
                   )}
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Certificate of Authenticity */}
-      <section className="py-16 bg-gradient-to-br from-gray-900 to-black text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white text-black p-12 shadow-2xl">
-            
-            {/* Certificate Header */}
-            <div className="text-center border-b border-gray-200 pb-8 mb-8">
-              <h2 className="text-3xl font-serif mb-2">Certificate of Authenticity</h2>
-              <p className="text-gray-600">Digital Art Verification</p>
-            </div>
-
-            {/* Certificate Content */}
-            <div className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold mb-2">Artwork Details</h3>
-                  <div className="space-y-1 text-sm">
-                    <p><strong>Title:</strong> {artwork.title}</p>
-                    <p><strong>Artist:</strong> Tim Watts</p>
-                    <p><strong>Medium:</strong> {artwork.medium}</p>
-                    {artwork.year && <p><strong>Year Created:</strong> {artwork.year}</p>}
-                    {artwork.dimensions && <p><strong>Dimensions:</strong> {artwork.dimensions}</p>}
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="font-semibold mb-2">Verification</h3>
-                  <div className="space-y-1 text-sm">
-                    <p><strong>Certificate ID:</strong> {artwork.certificate_id || `TWA-${artwork.id.toString().padStart(4, '0')}`}</p>
-                    <p><strong>Issue Date:</strong> {new Date().toLocaleDateString()}</p>
-                    <p><strong>Authenticity:</strong> Verified Original</p>
-                    <p><strong>Digital ID:</strong> #{artwork.id}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Certificate Statement */}
-              <div className="border-t border-gray-200 pt-6">
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  This certificate confirms the authenticity of the digital artwork "{artwork.title}" 
-                  created by Tim Watts. This work is an original creation and part of the artist's 
-                  verified portfolio. The digital signature and metadata associated with this piece 
-                  serve as proof of provenance and ownership history.
-                </p>
-              </div>
-
-              {/* Artist Signature Area */}
-              <div className="border-t border-gray-200 pt-6 flex justify-between items-end">
-                <div>
-                  <div className="h-12 flex items-end">
-                    <span className="text-2xl font-script text-gray-800">Tim Watts</span>
-                  </div>
-                  <p className="text-xs text-gray-600 border-t border-gray-300 pt-1 mt-2">
-                    Artist Signature
-                  </p>
-                </div>
-                
-                <div className="text-right">
-                  <p className="text-xs text-gray-600">
-                    Issued: {new Date().toLocaleDateString()}
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    timwatts.art
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
