@@ -468,25 +468,25 @@ export default function HomePage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('_subject', 'New Email Subscription from timwatts.art');
-
     try {
-      const response = await fetch('https://formspree.io/f/xyznyrbg', {
+      const response = await fetch('/api/newsletter', {
         method: 'POST',
-        body: formData,
         headers: {
-          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          email: email,
+        }),
       });
+
+      const data = await response.json();
 
       if (response.ok) {
         setIsSubmitted(true);
         setEmail('');
         setTimeout(() => setIsSubmitted(false), 3000);
       } else {
-        throw new Error('Failed to subscribe');
+        throw new Error(data.error || 'Failed to subscribe');
       }
     } catch (error) {
       console.error('Subscription error:', error);
