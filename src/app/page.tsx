@@ -446,15 +446,20 @@ export default function HomePage() {
                 <div key={piece.id} className="group relative">
                   {/* Standard size image for prints in 3-column grid */}
                   <div className="aspect-[3/4] bg-gray-200 overflow-hidden relative mb-6 shadow-lg">
-                    <img 
-                      src={piece.image_path} 
-                      alt={piece.title}
-                      className="w-full h-full object-cover cursor-pointer transform group-hover:scale-105 transition-transform duration-300"
-                      onTouchEnd={() => handleDoubleTap(piece.id)}
-                    />
+                    <a href={`/artwork/${piece.id}`} className="block w-full h-full">
+                      <img 
+                        src={piece.image_path} 
+                        alt={piece.title}
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          handleDoubleTap(piece.id);
+                        }}
+                      />
+                    </a>
                     
                     {/* Preorder badge */}
-                    <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 text-sm font-medium">
+                    <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 text-sm font-medium pointer-events-none">
                       Limited Edition
                     </div>
                   
@@ -482,6 +487,7 @@ export default function HomePage() {
                         <button
                           onClick={(e) => {
                             e.preventDefault();
+                            e.stopPropagation();
                             handleLike(piece.id);
                           }}
                           className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white px-3 py-2 rounded-full hover:bg-black/80 transition-colors"
@@ -501,6 +507,28 @@ export default function HomePage() {
                         </button>
                       </div>
                     )}
+
+                    {/* External link button - bottom right */}
+                    <div className="absolute bottom-3 right-3 z-10">
+                      <a 
+                        href={`/artwork/${piece.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="block w-12 h-12 bg-gray-600/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-700/90 transition-colors"
+                      >
+                        <svg 
+                          width="20" 
+                          height="20" 
+                          viewBox="0 0 24 24" 
+                          fill="none" 
+                          stroke="white" 
+                          strokeWidth="2"
+                        >
+                          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                          <polyline points="15,3 21,3 21,9"/>
+                          <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                      </a>
+                    </div>
                   </div>
                   
                   {/* Title and details below image */}
