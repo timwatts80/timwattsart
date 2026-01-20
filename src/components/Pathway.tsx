@@ -190,7 +190,7 @@ export default function Pathway() {
                             <TitleDecoration key="the-work" seed={3} />
                         </div>
                         <p className="text-lg text-neutral-700 leading-relaxed mb-6 flex-grow">
-                            A broader body of visual work, shared without narrative or instruction.
+                            A broader body of visual work, shared with context rather than interpretation.
                         </p>
                         <a
                             href="/gallery"
