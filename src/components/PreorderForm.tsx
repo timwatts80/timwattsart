@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-interface PreorderFormProps {
+interface OrderFormProps {
   isOpen: boolean
   onClose: () => void
   artworkTitle: string
@@ -10,7 +10,7 @@ interface PreorderFormProps {
   artworkSrc: string
 }
 
-export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId, artworkSrc }: PreorderFormProps) {
+export default function OrderForm({ isOpen, onClose, artworkTitle, artworkId, artworkSrc }: OrderFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState('')
@@ -44,10 +44,10 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
         }, 3000)
       } else {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to send preorder request')
+        throw new Error(errorData.error || 'Failed to send order request')
       }
     } catch (err) {
-      setError('Failed to send preorder request. Please try again.')
+      setError('Failed to send order request. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -78,7 +78,7 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
           <div className="p-8">
             {!isSubmitted ? (
               <>
-                <h2 className="text-2xl font-light mb-4 text-black">Preorder Limited Edition Print</h2>
+                <h2 className="text-2xl font-light mb-4 text-black">Order Limited Edition Print</h2>
                 
                 {/* Artwork Preview */}
                 <div className="flex items-center gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
@@ -94,15 +94,8 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
                 </div>
 
                 <p className="text-gray-600 text-sm mb-6">
-                  Get notified when prints of this artwork are ready. No commitment required.
+                  Place your order for a limited edition print of this artwork.
                 </p>
-
-                {/* Discount Notice */}
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-black text-sm font-medium">
-                    Special Offer: All preorders will receive 20% off their order placed before Nov 27, 2025 (Thanksgiving)
-                  </p>
-                </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
@@ -136,7 +129,7 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
                   </div>
 
                   {/* Hidden fields for form identification */}
-                  <input type="hidden" name="_subject" value={`Print Notification Request: ${artworkTitle}`} />
+                  <input type="hidden" name="_subject" value={`Print Order Request: ${artworkTitle}`} />
                   
                   {error && (
                     <div className="text-red-600 text-sm">
@@ -146,7 +139,7 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
 
                   {/* Updated note */}
                   <div className="bg-gray-50 p-3 rounded text-sm text-gray-600">
-                    <strong>Note:</strong> You will be notified when the final prints are produced and can order your copy when you're ready. No payment required now.
+                    <strong>Note:</strong> This is an order request. You will receive a confirmation email with payment details and shipping information.
                   </div>
 
                   <div className="flex gap-3 pt-2">
@@ -163,7 +156,7 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
                       className="btn-primary flex-1"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Sending...' : 'Preorder Now'}
+                      {isSubmitting ? 'Sending...' : 'Place Order'}
                     </button>
                   </div>
                 </form>
@@ -171,9 +164,9 @@ export default function PreorderForm({ isOpen, onClose, artworkTitle, artworkId,
             ) : (
               <div className="text-center py-4">
                 <div className="text-4xl mb-4 text-black">✓</div>
-                <h3 className="text-xl font-light mb-2 text-black">You're on the list!</h3>
+                <h3 className="text-xl font-light mb-2 text-black">Order Received!</h3>
                 <p className="text-gray-600 text-sm">
-                  Check your email for confirmation. I'll notify you when prints of this artwork are ready to order.
+                  Thank you for your order! Check your email for confirmation and payment details.
                 </p>
               </div>
             )}

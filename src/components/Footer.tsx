@@ -20,8 +20,7 @@ export default function Footer() {
                 className="h-20 w-auto mb-4"
               />
               <p className="text-gray-300 max-w-md leading-relaxed">
-                Contemporary artist exploring the intersection of emotion and form through 
-                modern artistic expression. Each piece tells a story of human experience.
+                Contemporary artist working with attention, process, and form.
               </p>
             </div>
 
@@ -30,7 +29,7 @@ export default function Footer() {
               <h3 className="text-white font-medium mb-4">Navigation</h3>
               <ul className="space-y-3">
                 <li><a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
-                <li><a href="/gallery" className="text-gray-300 hover:text-white transition-colors">Gallery</a></li>
+                <li><a href="/gallery" className="text-gray-300 hover:text-white transition-colors">Work</a></li>
                 <li><a href="/about" className="text-gray-300 hover:text-white transition-colors">About Me</a></li>
                 <li><a href="/links" className="text-gray-300 hover:text-white transition-colors">Links</a></li>
               </ul>
@@ -79,16 +78,6 @@ export default function Footer() {
                   </svg>
                 </a>
               </div>
-              <ul className="space-y-3 mt-4">
-                <li>
-                  <button 
-                    onClick={() => setShowCommissionForm(true)}
-                    className="text-gray-300 hover:text-white transition-colors text-left"
-                  >
-                    Commission Work
-                  </button>
-                </li>
-              </ul>
             </div>
           </div>
 
@@ -96,7 +85,7 @@ export default function Footer() {
           <div className="pt-8 border-t border-gray-800">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <p className="text-gray-400 text-sm mb-4 md:mb-0">
-                © 2025 Tim Watts. All rights reserved.
+                © {new Date().getFullYear()} Tim Watts. All rights reserved.
               </p>
             </div>
           </div>

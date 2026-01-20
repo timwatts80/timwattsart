@@ -138,16 +138,16 @@ export default function GalleryPage() {
       <Header />
       
       {/* Header Spacer */}
-      <div className="pt-16"></div>
+      <div className="pt-20"></div>
       
       {/* Gallery Hero Section */}
       <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-light mb-6 text-black">Gallery</h1>
+
             <p className="text-gray-600 text-xl max-w-3xl mx-auto leading-relaxed">
-              A curated collection of contemporary works exploring themes of identity, technology, and human connection. 
-              Each piece represents a moment of discovery in my artistic journey.
+              The work comes first.
+Each piece includes a short text, offered as context rather than interpretation.
             </p>
           </div>
         </div>

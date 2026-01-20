@@ -1,10 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import PreorderForm from '@/components/PreorderForm';
+
 import CommissionForm from '@/components/CommissionForm';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import HeroConceptB from '@/components/HeroConceptB';
+import OrientationSection from '@/components/OrientationSection';
+import OnTheWork from '@/components/OnTheWork';
+import LimitedEditionPrints from '@/components/LimitedEditionPrints';
+import FeaturedArtwork from '@/components/FeaturedArtwork';
+import HighlightArtwork from '@/components/HighlightArtwork';
+import HighlightArtwork2 from '@/components/HighlightArtwork2';
+import Perspective from '@/components/Perspective';
+import Pathway from '@/components/Pathway';
+import EmailSignup from '@/components/EmailSignup';
 
 // Types
 type Artwork = {
@@ -14,6 +24,7 @@ type Artwork = {
   image_path: string;
   available: boolean;
   preorder: boolean;
+  featured: boolean;
   likes: number;
 };
 
@@ -76,9 +87,9 @@ function MobileMosaic({ onImageClick }: { onImageClick: (index: number) => void 
                 onImageClick(block.index);
               }}
             >
-              <img 
-                src={block.img} 
-                alt="Artwork" 
+              <img
+                src={block.img}
+                alt="Artwork"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -128,12 +139,8 @@ const artCollections = [
 ];
 
 export default function HomePage() {
-  const [email, setEmail] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCommissionForm, setShowCommissionForm] = useState(false);
-  const [showPreorderForm, setShowPreorderForm] = useState(false);
-  const [selectedArtwork, setSelectedArtwork] = useState<{ id: number; title: string; src: string } | null>(null);
+
   const [mounted, setMounted] = useState(false);
   const [likes, setLikes] = useState<Record<number, number>>({});
   const [heartAnimations, setHeartAnimations] = useState<Record<number, boolean>>({});
@@ -151,14 +158,14 @@ export default function HomePage() {
 
   useEffect(() => {
     setMounted(true);
-    
+
     // Load artworks and likes from database
     fetch('/api/artworks/')
       .then(async res => {
         if (res.ok) {
           const artworkData = await res.json();
           setArtworks(artworkData);
-          
+
           // Convert to likes format for existing like functionality
           const likesData: Record<number, number> = {};
           artworkData.forEach((artwork: Artwork) => {
@@ -178,7 +185,7 @@ export default function HomePage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!lightboxOpen) return;
-      
+
       if (e.key === 'Escape') {
         closeLightbox();
       } else if (e.key === 'ArrowLeft') {
@@ -195,10 +202,12 @@ export default function HomePage() {
   // Remove the localStorage save effect since we're using database now
 
   const openLightbox = (index: number) => {
-    console.log('Opening lightbox with index:', index);
-    setCurrentLightboxIndex(index);
-    setLightboxOpen(true);
-    console.log('Lightbox state set to true');
+    if (heroImages.length > 0 && index < heroImages.length) {
+      console.log('Opening lightbox with index:', index);
+      setCurrentLightboxIndex(index);
+      setLightboxOpen(true);
+      console.log('Lightbox state set to true');
+    }
   };
 
   const closeLightbox = () => {
@@ -206,11 +215,15 @@ export default function HomePage() {
   };
 
   const nextImage = () => {
-    setCurrentLightboxIndex((prev) => (prev + 1) % heroImages.length);
+    if (heroImages.length > 0) {
+      setCurrentLightboxIndex((prev) => (prev + 1) % heroImages.length);
+    }
   };
 
   const prevImage = () => {
-    setCurrentLightboxIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+    if (heroImages.length > 0) {
+      setCurrentLightboxIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+    }
   };
 
   const handleLike = async (pieceId: number) => {
@@ -220,10 +233,10 @@ export default function HomePage() {
         ...prev,
         [pieceId]: (prev[pieceId] || 0) + 1
       }));
-      
+
       // Trigger heart animation
       setHeartAnimations(prev => ({ ...prev, [pieceId]: true }));
-      
+
       // Remove animation after it completes
       setTimeout(() => {
         setHeartAnimations(prev => ({ ...prev, [pieceId]: false }));
@@ -243,7 +256,7 @@ export default function HomePage() {
       }
 
       const data = await response.json();
-      
+
       // Update with actual count from server
       setLikes(prev => ({
         ...prev,
@@ -260,23 +273,15 @@ export default function HomePage() {
     }
   };
 
-  const handlePreorderClick = (artworkId: number, artworkTitle: string, artworkSrc: string) => {
-    setSelectedArtwork({ id: artworkId, title: artworkTitle, src: artworkSrc });
-    setShowPreorderForm(true);
-  };
 
-  const handleClosePreorderForm = () => {
-    setShowPreorderForm(false);
-    setSelectedArtwork(null);
-  };
 
   const handleDoubleTap = (pieceId: number) => {
     const now = Date.now();
     const lastTapTime = lastTap[pieceId] || 0;
     const timeDiff = now - lastTapTime;
-    
+
     setLastTap(prev => ({ ...prev, [pieceId]: now }));
-    
+
     // If double tap detected (within 300ms), trigger like
     if (timeDiff < 300 && timeDiff > 0) {
       handleLike(pieceId);
@@ -285,427 +290,52 @@ export default function HomePage() {
     }
   };
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setIsSubmitted(true);
-        setEmail('');
-        setTimeout(() => setIsSubmitted(false), 3000);
-      } else {
-        throw new Error(data.error || 'Failed to subscribe');
-      }
-    } catch (error) {
-      console.error('Subscription error:', error);
-      // Still show success message to avoid confusing users
-      setIsSubmitted(true);
-      setEmail('');
-      setTimeout(() => setIsSubmitted(false), 3000);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <main className="min-h-screen bg-white text-black">
       <Header />
 
-      {/* Hero Section with Mosaic */}
-      <section id="home" className="mt-16 relative overflow-hidden">
-        {/* Desktop Layout */}
-        <div className="hidden lg:block h-[80vh]">
-          {/* Background Image - reduced height */}
-          <div 
-            className="absolute inset-0 h-[68vh] bg-cover bg-left bg-no-repeat"
-            style={{ backgroundImage: 'url(/images/TIM_HZMU_006.png)' }}
-          ></div>
-          {/* Light filter overlay */}
-          <div className="absolute inset-0 bg-white/70 h-[68vh]"></div>
-          
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10 h-full flex items-center">
-            <div className="grid lg:grid-cols-2 lg:gap-32 items-center w-full h-full">
-              {/* Left side - Text content */}
-              <div className="space-y-8">
-                <div>
-                  <h1>
-                    They Call It Chaos.
-                    <br />
-                    <span className="italic">I Call It Home.</span>
-                  </h1>
-                  <p className="text-xl text-gray-600 mt-6 leading-relaxed">
-                    Step into a world where thousands of lines converge into balance. Each piece holds both tension and calm, inviting you to see your own reflection in the art.
-                  </p>
-                </div>
-                <div className="flex space-x-4">
-                  <a href="/gallery" className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition-colors inline-block text-center">
-                    View Gallery
-                  </a>
-                  <button 
-                    onClick={() => setShowCommissionForm(true)}
-                    className="border border-black text-black px-8 py-3 hover:bg-black hover:text-white transition-colors"
-                  >
-                    Commission Work
-                  </button>
-                </div>
-              </div>
-              
-              {/* Right side - Artwork Mosaic */}
-              <div className="relative w-full max-h-[600px]">
-                <div className="flex flex-col gap-[20px] items-start justify-center relative h-full scale-125 pt-2">
-                  <div className="flex gap-[25.633px] items-end justify-start relative shrink-0">
-                    <div className="h-[168px] shrink-0 w-[132px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => {
-                      console.log('Desktop image clicked, index: 0');
-                      openLightbox(0);
-                    }}>
-                      <img src="/images/TIM_IMG_001.png" alt="Artwork" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="h-[301px] shrink-0 w-[236px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => openLightbox(3)}>
-                      <img src="/images/TIM_IMG_004.png" alt="Artwork" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="h-[258px] shrink-0 w-[206px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => openLightbox(2)}>
-                      <img src="/images/TIM_IMG_003.png" alt="Artwork" className="w-full h-full object-cover" />
-                    </div>
-                  </div>
-                  <div className="flex gap-[26.273px] items-start justify-start relative shrink-0 ml-20">
-                    <div className="h-[203px] shrink-0 w-[162px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => openLightbox(1)}>
-                      <img src="/images/TIM_IMG_002.png" alt="Artwork" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="h-[266px] shrink-0 w-[212px] hover:opacity-80 transition-opacity group cursor-pointer overflow-hidden" onClick={() => openLightbox(4)}>
-                      <img src="/images/TIM_IMG_005.png" alt="Artwork" className="w-full h-full object-cover" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Hero Section — Grounded Contact */}
+      <div className="pt-16 lg:pt-20">
+        <HeroConceptB />
+      </div>
+      {/* On The Work Section */}
+      <div id="on-the-work">
+        <OnTheWork />
+      </div>
 
-        {/* Mobile Layout */}
-        <div className="lg:hidden bg-gray-100">
-          {/* Title Block */}
-          <div className="px-4 sm:px-6 pt-8 pb-8">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-light leading-tight">
-                They Call It Chaos.
-                <br />
-                <span className="italic">I Call It Home.</span>
-              </h1>
-              <p className="text-lg text-gray-600 mt-6 leading-relaxed">
-                Step into a world where thousands of lines converge into balance. Each piece holds both tension and calm, inviting you to see your own reflection in the art.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <a href="/gallery" className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition-colors inline-block text-center">
-                View Gallery
-              </a>
-              <button className="border border-black text-black px-8 py-3 hover:bg-black hover:text-white transition-colors">
-                Commission Work
-              </button>
-            </div>
-          </div>
+      {/* Limited Edition Prints Section
+      <FeaturedArtwork
+        artworks={artworks}
+        loading={loading}
+        mounted={mounted}
+        likes={likes}
+        heartAnimations={heartAnimations}
+        lastTap={lastTap}
+        handleLike={handleLike}
+        handleDoubleTap={handleDoubleTap}
+      /> */}
 
-          {/* Mosaic Block */}
-          <div className="px-4 sm:px-6 pb-12">
-            <MobileMosaic onImageClick={openLightbox} />
-          </div>
-        </div>
-      </section>
+      {/* Highlight Artwork 2 Section */}
+      <div id="highlight-artwork-2">
+        <HighlightArtwork2 />
+      </div>
 
-      {/* Prints Available for Preorder Section - Above Gallery */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-light mb-4">Limited Edition Prints</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              High-quality giclée prints of select works, available for preorder. Each print is numbered and signed.
-            </p>
-          </div>
-          
-          {/* Three-column grid for the 3 preorder pieces */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {loading ? (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-600">Loading prints...</p>
-              </div>
-            ) : (
-              artworks.filter(piece => piece.preorder).map((piece) => (
-                <div key={piece.id} className="group relative">
-                  {/* Standard size image for prints in 3-column grid */}
-                  <div className="aspect-[3/4] bg-gray-200 overflow-hidden relative mb-6 shadow-lg">
-                    <a href={`/artwork/${piece.id}`} className="block w-full h-full">
-                      <img 
-                        src={piece.image_path} 
-                        alt={piece.title}
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                        onTouchEnd={(e) => {
-                          e.preventDefault();
-                          handleDoubleTap(piece.id);
-                        }}
-                      />
-                    </a>
-                    
-                    {/* Preorder badge */}
-                    <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 text-sm font-medium pointer-events-none">
-                      Limited Edition
-                    </div>
-                  
-                    {/* Animated heart in center */}
-                    {mounted && heartAnimations[piece.id] && (
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                        <svg
-                          width="60"
-                          height="60"
-                          viewBox="0 0 24 24"
-                          fill="#ef4444"
-                          className="drop-shadow-lg"
-                          style={{
-                            animation: 'heartBounce 0.6s ease-out'
-                          }}
-                        >
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                      </div>
-                    )}
-                    
-                    {/* Like button and counter - bottom left */}
-                    {mounted && (
-                      <div className="absolute bottom-3 left-3 z-10">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleLike(piece.id);
-                          }}
-                          className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white px-3 py-2 rounded-full hover:bg-black/80 transition-colors"
-                        >
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            className="text-red-500 hover:scale-110 transition-transform"
-                          >
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                          </svg>
-                          <span className="text-sm font-medium">{likes[piece.id] || 0}</span>
-                        </button>
-                      </div>
-                    )}
+      {/* Highlight Artwork Section */}
+      <div id="highlight-artwork-1">
+        <HighlightArtwork />
+      </div>
 
-                    {/* External link button - bottom right */}
-                    <div className="absolute bottom-3 right-3 z-10">
-                      <a 
-                        href={`/artwork/${piece.id}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="block w-12 h-12 bg-gray-600/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-700/90 transition-colors"
-                      >
-                        <svg 
-                          width="20" 
-                          height="20" 
-                          viewBox="0 0 24 24" 
-                          fill="none" 
-                          stroke="white" 
-                          strokeWidth="2"
-                        >
-                          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
-                          <polyline points="15,3 21,3 21,9"/>
-                          <line x1="10" y1="14" x2="21" y2="3"/>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                  
-                  {/* Title and details below image */}
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-xl font-light text-gray-900">{piece.title}</h3>
-                      <p className="text-gray-600">{piece.medium}</p>
-                    </div>
-                    
-                    {/* Print details */}
-                    <div className="space-y-1 text-sm text-gray-600">
-                      <p>• Limited edition of 50 prints</p>
-                      <p>• High-quality giclée on archival paper</p>
-                      <p>• Signed and numbered by the artist</p>
-                      <p>• Multiple sizes available</p>
-                    </div>
-                    
-                    {/* Preorder button */}
-                    <button 
-                      onClick={() => handlePreorderClick(piece.id, piece.title, piece.image_path)}
-                      className="w-full bg-black text-white py-3 px-6 text-lg font-medium hover:bg-gray-800 transition-colors transform hover:scale-105 duration-200"
-                    >
-                      Preorder Print
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </section>
+      {/* Perspective Section */}
+      <Perspective />
 
-      {/* View Artwork CTA Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-light mb-4">Explore My Complete Collection</h2>
-          <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
-            Discover the full range of my contemporary works. Each piece tells a unique story through color, form, and emotion.
-          </p>
-          <a 
-            href="/gallery" 
-            className="inline-block bg-black text-white px-8 py-4 text-lg hover:bg-gray-800 transition-colors"
-          >
-            View My Artwork
-          </a>
-        </div>
-      </section>
+      {/* Pathway Section */}
+      <Pathway />
 
       {/* Email Signup Section */}
-      <section className="py-20 bg-black text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-light mb-6">Stay Connected</h2>
-          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            Be the first to know about new works, exhibitions, and exclusive print releases. 
-            Join our community of art enthusiasts.
-          </p>
-          
-          <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto">
-            <div className="flex">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 bg-white text-black placeholder-gray-500 focus:outline-none"
-                required
-              />
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-white text-black px-8 py-3 hover:bg-gray-200 transition-colors font-medium disabled:opacity-50"
-              >
-                {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-              </button>
-            </div>
-          </form>
-          
-          {isSubmitted && (
-            <p className="mt-4 text-green-400">Thank you for subscribing!</p>
-          )}
-        </div>
-      </section>
+      <EmailSignup />
 
       <Footer />
 
-      {/* Preorder Form Modal */}
-      {selectedArtwork && (
-        <PreorderForm
-          isOpen={showPreorderForm}
-          onClose={handleClosePreorderForm}
-          artworkTitle={selectedArtwork.title}
-          artworkId={selectedArtwork.id}
-          artworkSrc={selectedArtwork.src}
-        />
-      )}
-
-      {/* Commission Form */}
-      <CommissionForm
-        isOpen={showCommissionForm}
-        onClose={() => setShowCommissionForm(false)}
-      />
-
-      {/* Hero Lightbox */}
-      {lightboxOpen && (
-        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50" onClick={closeLightbox}>
-          <div className="relative max-w-4xl max-h-full p-4" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={closeLightbox}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl z-10"
-              aria-label="Close lightbox"
-            >
-              ×
-            </button>
-            
-            <div className="relative">
-              <img
-                src={heroImages[currentLightboxIndex].src}
-                alt={heroImages[currentLightboxIndex].title}
-                className="max-w-full max-h-[80vh] object-contain"
-              />
-              
-              {/* Navigation arrows */}
-              <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 text-4xl"
-                aria-label="Previous image"
-              >
-                ‹
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 text-4xl"
-                aria-label="Next image"
-              >
-                ›
-              </button>
-              
-              {/* Image counter */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white bg-black/50 px-3 py-1 rounded">
-                {currentLightboxIndex + 1} / {heroImages.length}
-              </div>
-              
-              {/* Thumbnail navigation */}
-              <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex space-x-2">
-                {heroImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentLightboxIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-colors ${
-                      index === currentLightboxIndex ? 'bg-white' : 'bg-white/50'
-                    }`}
-                    aria-label={`Go to image ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* CSS Animation Styles */}
-      <style jsx>{`
-        @keyframes heartBounce {
-          0% {
-            transform: scale(0);
-            opacity: 0;
-          }
-          50% {
-            transform: scale(1.2);
-            opacity: 1;
-          }
-          100% {
-            transform: scale(1);
-            opacity: 0;
-          }
-        }
-      `}</style>
     </main>
   );
 }

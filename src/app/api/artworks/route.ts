@@ -14,6 +14,7 @@ export async function GET() {
         src as image_path,
         available,
         preorder,
+        featured,
         COALESCE(like_count, 0) as likes
       FROM artworks
       ORDER BY id ASC

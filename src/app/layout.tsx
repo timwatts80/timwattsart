@@ -64,12 +64,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Editorial Serif for Headlines — Calm, Grounded, Non-Performative */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link 
-          href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" 
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&family=Dancing+Script:wght@400;700&display=swap" 
           rel="stylesheet" 
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased font-sans">
         {children}
         <Analytics />
       </body>

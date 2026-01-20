@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS artworks (
     medium TEXT NOT NULL,
     available BOOLEAN DEFAULT true,
     preorder BOOLEAN DEFAULT false,
+    featured BOOLEAN DEFAULT false,
     src TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
