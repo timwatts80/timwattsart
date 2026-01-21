@@ -5,6 +5,56 @@ import CommissionForm from './CommissionForm';
 
 export default function Footer() {
   const [showCommissionForm, setShowCommissionForm] = useState(false);
+  const [thumbAnimation, setThumbAnimation] = useState(false);
+  const [showPopover, setShowPopover] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationMessage, setValidationMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+  const handleThumbClick = () => {
+    setThumbAnimation(true);
+    setTimeout(() => setThumbAnimation(false), 600);
+    setShowPopover(true);
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/website-interest/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setEmail('');
+        setValidationMessage({ type: 'success', text: "Awesome! I'll be in touch." });
+        setTimeout(() => {
+          setValidationMessage(null);
+          setShowPopover(false);
+        }, 10000);
+      } else {
+        setValidationMessage({ type: 'error', text: 'Something went wrong. Please email me directly at info@timwatts.art' });
+        setTimeout(() => {
+          setValidationMessage(null);
+          setShowPopover(false);
+        }, 10000);
+      }
+    } catch (error) {
+      console.error('Error submitting email:', error);
+      setValidationMessage({ type: 'error', text: 'Something went wrong. Please email me directly at info@timwatts.art' });
+      setTimeout(() => {
+        setValidationMessage(null);
+        setShowPopover(false);
+      }, 10000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -19,9 +69,98 @@ export default function Footer() {
                 alt="Tim Watts" 
                 className="h-20 w-auto mb-4"
               />
-              <p className="text-gray-300 max-w-md leading-relaxed">
+              <p className="text-gray-300 max-w-md leading-relaxed mb-4">
                 Contemporary artist working with attention, process, and form.
               </p>
+              
+              {!showPopover ? (
+                <div className="relative inline-block">
+                  <p className="inline">
+                    If you like my website, let me know.
+                  </p>
+                  <button
+                    onClick={handleThumbClick}
+                    className="relative inline-flex items-center ml-2 text-gray-300 hover:text-white transition-colors bg-white bg-opacity-20 rounded-full p-2"
+                    aria-label="Like"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                    </svg>
+                    
+                    {/* Animated thumb overlay */}
+                    {thumbAnimation && (
+                      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 pointer-events-none">
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="#fbbf24"
+                          stroke="#fbbf24"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="drop-shadow-2xl"
+                          style={{
+                            animation: 'thumbBounce 0.6s ease-out'
+                          }}
+                        >
+                          <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <div className="max-w-sm relative">
+                  {!validationMessage ? (
+                    <>
+                      <button
+                        onClick={() => setShowPopover(false)}
+                        className="absolute -top-3 -right-3 text-gray-400 hover:text-white transition-colors bg-white rounded-full bg-opacity-20"
+                        aria-label="Close"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                      </button>
+                      <label className="block text-gray-300 text-sm mb-2">
+                        Thanks! I can build you one. Interested?
+                      </label>
+                      <form onSubmit={handleEmailSubmit} className="flex gap-2">
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="your@email.com"
+                          required
+                          disabled={isSubmitting}
+                          className="flex-1 px-3 py-2 text-sm bg-white text-black border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50"
+                        />
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="bg-white text-black px-4 py-2 text-sm rounded hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isSubmitting ? 'Sending...' : 'Send'}
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <p className={`text-sm ${validationMessage.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                      {validationMessage.text}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Navigation Column */}
@@ -97,6 +236,24 @@ export default function Footer() {
         isOpen={showCommissionForm}
         onClose={() => setShowCommissionForm(false)}
       />
+
+      {/* Animation Styles */}
+      <style jsx>{`
+        @keyframes thumbBounce {
+          0% {
+            transform: scale(0);
+            opacity: 0;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </>
   );
 }

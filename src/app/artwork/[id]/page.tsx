@@ -143,7 +143,7 @@ export default function ArtworkPage() {
               href="/gallery"
               className="bg-gray-900 text-white px-6 py-3 hover:bg-black transition-colors"
             >
-              Back to Gallery
+              Back to artwork
             </Link>
           </div>
         </div>
@@ -282,7 +282,7 @@ export default function ArtworkPage() {
                         href="/gallery"
                         className="w-full sm:w-auto text-center border border-gray-300 text-gray-700 px-8 py-3 hover:bg-gray-50 transition-colors font-medium"
                       >
-                        Back to Gallery
+                        Back to artwork
                       </Link>
                     </div>
                   </div>
