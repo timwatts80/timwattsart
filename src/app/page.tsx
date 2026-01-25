@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
+import ScrollDrawnLine from '@/components/ScrollDrawnLine';
 import CommissionForm from '@/components/CommissionForm';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -292,6 +293,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-black">
+      <ScrollDrawnLine />
       <Header />
 
       {/* Hero Section — Grounded Contact */}
@@ -329,7 +331,9 @@ export default function HomePage() {
       <Perspective />
 
       {/* Pathway Section */}
-      <Pathway />
+      <div id="pathway">
+        <Pathway />
+      </div>
 
       {/* Email Signup Section */}
       <EmailSignup />

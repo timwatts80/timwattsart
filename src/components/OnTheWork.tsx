@@ -4,23 +4,28 @@ import NebulaBackground from './NebulaBackground';
 import AnimatedArrow from './AnimatedArrow';
 
 export default function OnTheWork() {
+  // Disable WebGL in development for faster reloads
+  const isDev = process.env.NODE_ENV === 'development';
+  
   return (
     <section className="relative h-screen overflow-hidden flex items-center">
-      <NebulaBackground
-        colors={[
-          [0.2, 0.2, 0.2],
-          [0.4, 0.4, 0.4],
-          [0.3, 0.3, 0.3],
-          [0.5, 0.5, 0.5],
-          [0.6, 0.6, 0.6]
-        ]}
-        style={{
-          position: 'absolute',
-          zIndex: 0
-        }}
-      />
+      {!isDev && (
+        <NebulaBackground
+          colors={[
+            [0.2, 0.2, 0.2],
+            [0.4, 0.4, 0.4],
+            [0.3, 0.3, 0.3],
+            [0.5, 0.5, 0.5],
+            [0.6, 0.6, 0.6]
+          ]}
+          style={{
+            position: 'absolute',
+            zIndex: 0
+          }}
+        />
+      )}
       {/* Dark filter overlay */}
-      <div className="absolute inset-0 bg-black/60 z-[1]"></div>
+      <div className={`absolute inset-0 ${isDev ? 'bg-gray-900' : 'bg-black/60'} z-[1]`}></div>
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-right">
         <h2 className="text-sm font-light mb-6 text-gray-300 uppercase">On The Work</h2>
         <p className="text-xl text-white mb-8 leading-relaxed">

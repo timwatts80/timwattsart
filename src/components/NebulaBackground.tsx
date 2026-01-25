@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 const SHADERS = {
   vertex: `
@@ -161,6 +161,9 @@ export default function NebulaBackground({
   const startTimeRef = useRef<number>(0);
   const colorsRef = useRef<number[][]>(colors || generateNebulaColors());
 
+  // Memoize dependency values to prevent unnecessary effect reruns
+  const depsKey = useMemo(() => JSON.stringify({ speed, mouseX, mouseY, inverted }), [speed, mouseX, mouseY, inverted]);
+
   useEffect(() => {
     if (!canvasRef.current) return;
     
@@ -253,7 +256,7 @@ export default function NebulaBackground({
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [speed, mouseX, mouseY, inverted]);
+  }, [depsKey]);
 
   return (
     <canvas

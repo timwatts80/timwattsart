@@ -51,7 +51,13 @@ export default function EmailSignup() {
                     You can unsubscribe anytime.
                 </p>
 
-                <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto" suppressHydrationWarning>
+                <form
+                    onSubmit={handleEmailSubmit}
+                    className="max-w-md mx-auto"
+                    suppressHydrationWarning
+                    data-lpignore="true"
+                    autoComplete="off"
+                >
                     <div className="flex">
                         <input
                             type="email"
@@ -61,6 +67,8 @@ export default function EmailSignup() {
                             className="flex-1 px-4 py-3 bg-white text-black placeholder-gray-500 focus:outline-none"
                             required
                             suppressHydrationWarning
+                            data-lpignore="true"
+                            autoComplete="off"
                         />
                         <button
                             type="submit"
